@@ -55,6 +55,7 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Code\main.ja" />
     <Content Include="index.html" />
     <None Include="Screeps-GitHub_TemporaryKey.pfx" />
   </ItemGroup>
