@@ -1,5 +1,8 @@
 ﻿
-module.exports.loop = function ()
-{
-	console.log("Hello World 3")
+var roomHelper = require('RoomHelper');
+
+module.exports.loop = function () {
+    for (var i in Game.spawns) {
+        roomHelper.ParseRoom(Game.spawns[i].room)
+    }
 }
