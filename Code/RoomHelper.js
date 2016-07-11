@@ -1,5 +1,4 @@
-
-module.exports = {
+﻿module.exports = {
 
     ParseRoom: function (room) {
         console.log("What up")
