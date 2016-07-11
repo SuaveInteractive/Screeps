@@ -1,4 +1,4 @@
-﻿
+
 module.exports = {
 
     ParseRoom: function (room) {

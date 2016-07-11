@@ -1,5 +1,4 @@
-﻿
-var roomHelper = require('RoomHelper');
+﻿var roomHelper = require('RoomHelper');
 
 module.exports.loop = function () {
     for (var i in Game.spawns) {
