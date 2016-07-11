@@ -1,4 +1,3 @@
-
 var roleBuilder = {
 
     /** @param {Creep} creep **/
