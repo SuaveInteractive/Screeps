@@ -3,14 +3,16 @@ this._Debugging = true
 if (!Memory.HiveMind)
 {
     Memory.HiveMind = {}
+    Memory.HiveMind.CurrentPlans = {}
 }
 
-var evalPlans = require('EvaluateCurrentPlans');
-var calculateNeeds = require('CalculateNeeds');
-var createPlans = require('CreatePlans');
-var prioritisePlans = require('PrioritisePlans');
-var selectPlans = require('SelectPlans');
-var executePlans = require('ExecutePlans');
+var calculateNeeds = require('AI.CalculateNeeds');
+var createPlans = require('AI.CreatePlans');
+var evalPlans = require('AI.EvaluateCurrentPlans');
+var executePlans = require('AI.ExecutePlans');
+var prioritisePlans = require('AI.PrioritisePlans');
+var selectPlans = require('AI.SelectPlans');
+
     
 module.exports = {
 
@@ -33,7 +35,7 @@ module.exports = {
          newPlans = prioritisePlans.Prioritise(newPlans)
 
          // Select new plans and add them to the current plans
-         currentPlans.append(selectPlans.Select(newPlans))
+         currentPlans.concat(selectPlans.Select(newPlans))
 
          // Execute the current plans
          executePlans.Execute(currentPlans)

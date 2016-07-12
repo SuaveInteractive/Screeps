@@ -55,16 +55,18 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="Code\CalculateNeeds.js" />
-    <Content Include="Code\CreatePlans.js" />
+    <Content Include="Code\AI.CalculateNeeds.js" />
+    <Content Include="Code\AI.CreatePlans.js" />
     <Content Include="Code\CreepRole.Builder.js" />
-    <Content Include="Code\EvaluateCurrentPlans.js" />
-    <Content Include="Code\ExecutePlans.js" />
+    <Content Include="Code\AI.EvaluateCurrentPlans.js" />
+    <Content Include="Code\AI.ExecutePlans.js" />
     <Content Include="Code\HiveAgent.js" />
     <Content Include="Code\main.js" />
-    <Content Include="Code\PrioritisePlans.js" />
+    <Content Include="Code\AI.PrioritisePlans.js" />
     <Content Include="Code\RoomHelper.js" />
-    <Content Include="Code\SelectPlans.js" />
+    <Content Include="Code\AI.SelectPlans.js" />
+    <Content Include="Code\Utility.Energy.js" />
+    <Content Include="Code\Utility.Types.js" />
     <Content Include="index.html" />
     <None Include="Screeps-GitHub_TemporaryKey.pfx" />
   </ItemGroup>
