@@ -19,6 +19,7 @@ module.exports = {
      Run: function ()
      {
          console.log("HiveAgent - Run");
+         var world = {}
 
          var currentPlans = Memory.HiveMind.CurrentPlans
 
@@ -26,7 +27,7 @@ module.exports = {
          currentPlans = evalPlans.Evaluate(currentPlans)
 
          // Calaculate the needs of the Colony based on the current plans
-         var needs = calculateNeeds.Calculate(currentPlans)
+         var needs = calculateNeeds.Calculate(world, currentPlans)
 
          // Create new plans based on needs
          var newPlans = createPlans.Create(needs)
