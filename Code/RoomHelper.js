@@ -1,6 +1,9 @@
 _Debugging = true
 
-Memory.ParsedRooms = {}
+if (!Memory.ParsedRooms)
+{
+    Memory.ParsedRooms = {}
+}
 
 module.exports = {
 
