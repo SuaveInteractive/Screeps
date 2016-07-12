@@ -1,3 +1,5 @@
+_Debugging = true
+
 Memory.ParsedRooms = {}
 
 module.exports = {
@@ -15,58 +17,62 @@ module.exports = {
         {
             var sourcePos = source.pos
             var harvesterPositions = []
-           // console.log((sourcePos.y - 1) + " - " + (sourcePos.x - 1) + " - " + (sourcePos.y + 1) + " - " + (sourcePos.x + 1))
 
             var area = room.lookForAtArea(LOOK_TERRAIN, sourcePos.y - 1, sourcePos.x - 1, sourcePos.y + 1, sourcePos.x + 1, false)
 
-            _.each(area, function (col, y)
+            _.forEach(area, function (col, y)
             {
-                _.each(col, function (cell, x)
+                _.forEach(col, function (cell, x)
                 {
                     for (i = 0; i < cell.length; i++)
                     {
-                        console.log(i + " pos " + x + " " + y + " cell.length: " + cell.length, " cell: " + cell);
-
                         if (cell == "plain")
                         {
-                            harvesterPositions.push[cell]
+                            harvesterPositions.push(new RoomPosition(x, y, room.name));
                         }
                     }
                 });
             });
 
-            // console.log(result.length)
-            //for (var i=1; result.length; i++)
-            //{
-            //  console.log(result[i])
-            //}
-
             Memory.ParsedRooms[room].Sources[source] =
                 {
                     SourcePos: sourcePos,
-                    HarvesterPositions: harvesterPositions
+                    HarvesterPositions: harvesterPositions,
                 }
         });
 
+        /*
         var sourcesActive = room.find(FIND_SOURCES_ACTIVE)
         for (var i in sourcesActive) {
             console.log("SOURCE ACTIVE" + i)
         }
+        */
 
+        // DEBUG
+        if (_Debugging)
+        {
+            _.forEach(Memory.ParsedRooms[room].Sources, function (source) 
+            {
+                console.log("Source Pos: " + source.sourcePos)
 
-        // Memory.ParsedRooms[room].Parsed = true;
+                _.forEach(source.HarvesterPositions, function (harvesterPositions)
+                {
+                    console.log("  Harvester Positions: " + harvesterPositions)
+                });
+            });
+        }
+
+         Memory.ParsedRooms[room].Parsed = true;
     },
 
     HasRoomBeenParsed: function (room)
     {
         for (var i in Memory.ParsedRooms)
         {
-            console.log(i + " -- " + room)
             if (i == room)
                 return Memory.ParsedRooms[room].Parsed;
         }
         return false;
     }
-
 };
 

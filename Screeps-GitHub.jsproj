@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Code\CreepRole.Builder.js" />
+    <Content Include="Code\HiveAgent.js" />
     <Content Include="Code\main.js" />
     <Content Include="Code\RoomHelper.js" />
     <Content Include="index.html" />
