@@ -1,4 +1,4 @@
-_Debugging = true
+this._Debugging = true
 
 if (!Memory.ParsedRooms)
 {
