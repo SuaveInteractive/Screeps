@@ -1,9 +1,8 @@
-this._Debugging = true
 
 if (!Memory.HiveMind)
 {
     Memory.HiveMind = {}
-    Memory.HiveMind.CurrentPlans = {}
+    Memory.HiveMind.CurrentPlans = []
 }
 
 var calculateNeeds = require('AI.CalculateNeeds');
@@ -15,11 +14,13 @@ var selectPlans = require('AI.SelectPlans');
 
     
 module.exports = {
-
+	 _Debugging: true,
+	 _Player: "Manix",
+	 
      Run: function ()
      {
          console.log("HiveAgent - Run");
-         var world = {}
+         var colonyState = this.CalculateColonyState()
 
          var currentPlans = Memory.HiveMind.CurrentPlans
 
@@ -27,7 +28,7 @@ module.exports = {
          currentPlans = evalPlans.Evaluate(currentPlans)
 
          // Calaculate the needs of the Colony based on the current plans
-         var needs = calculateNeeds.Calculate(world, currentPlans)
+         var needs = calculateNeeds.Calculate(colonyState, currentPlans)
 
          // Create new plans based on needs
          var newPlans = createPlans.Create(needs)
@@ -40,5 +41,30 @@ module.exports = {
 
          // Execute the current plans
          executePlans.Execute(currentPlans)
-     }
+     },
+	 	 
+	 CalculateColonyState: function()
+	 {
+		 var results = {}
+		 
+		 results.RoomsOwned = 0
+		 var playerName = this._Player
+		 _.forEach(Game.rooms, function(room) 
+		 {
+			 if (room.controller.owner.username == playerName)
+			 {
+				results.RoomsOwned = results.RoomsOwned + 1
+			 }
+         });
+		 
+		 if (this._Debugging == true)
+		 {
+			_.forEach(results, function(val, name) {
+				console.log(" " + name + ": " + val)
+			});
+		 }
+		 
+		 
+		 return {}
+	 }
 };

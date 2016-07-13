@@ -1,4 +1,3 @@
-this._Debugging = true
 
 var utilityTypes = require('Utility.Types');
 var utilityEnergy = require('Utility.Energy');
@@ -6,10 +5,13 @@ var utilityEnergy = require('Utility.Energy');
 var utilities = [utilityEnergy]
 
 module.exports = {
-
+	_Debugging: false,
+	
     Calculate: function (world, plans)
     {
-        console.log("AI.CalculateNeeds -> Calculate")
+		if (this._Debugging)
+			console.log("AI.CalculateNeeds -> Calculate")
+		
         var needs = {}
         _.forEach(utilityTypes, function(util) {
             needs[util] = 0;
@@ -22,13 +24,13 @@ module.exports = {
         });
         
 
-        // Calculate
-        if (_Debugging)
+        if (this._Debugging)
         {
             _.forEach(utilityTypes, function(util) {
                console.log(util + ": " + needs[util]);
             });
         }
-        
+		
+		return needs
     }
 };

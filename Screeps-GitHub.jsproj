@@ -63,6 +63,7 @@
     <Content Include="Code\HiveAgent.js" />
     <Content Include="Code\main.js" />
     <Content Include="Code\AI.PrioritisePlans.js" />
+    <Content Include="Code\Plan.HarvestEnergy.js" />
     <Content Include="Code\RoomHelper.js" />
     <Content Include="Code\AI.SelectPlans.js" />
     <Content Include="Code\Utility.Energy.js" />
