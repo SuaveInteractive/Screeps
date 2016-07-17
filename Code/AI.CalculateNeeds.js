@@ -1,8 +1,9 @@
 
 var utilityTypes = require('Utility.Types');
 var utilityEnergy = require('Utility.Energy');
+var utilityEnergyIncome = require('Utility.EnergyIncome');
 
-var utilities = [utilityEnergy]
+var utilities = [utilityEnergy, utilityEnergyIncome]
 
 module.exports = {
 	_Debugging: false,

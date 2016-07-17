@@ -11,10 +11,10 @@ var evalPlans = require('AI.EvaluateCurrentPlans');
 var executePlans = require('AI.ExecutePlans');
 var prioritisePlans = require('AI.PrioritisePlans');
 var selectPlans = require('AI.SelectPlans');
-
+var AIPlans = require('Plans');
     
 module.exports = {
-    _Debugging: true,
+    _Debugging: false,
     _Player: "Manix",
 	 
     Run: function ()
@@ -22,7 +22,7 @@ module.exports = {
         console.log("HiveAgent - Run");
         var colonyState = this.CalculateColonyState()
         
-        var currentPlans = Memory.HiveMind.CurrentPlans
+        var currentPlans = this._DeserialiseCurrentPlans()
         
         // Test to see if any current plans should be removed
         currentPlans = evalPlans.Evaluate(currentPlans)
@@ -37,26 +37,33 @@ module.exports = {
         newPlans = prioritisePlans.Prioritise(newPlans)
         
         // Select new plans and add them to the current plans
-        currentPlans.concat(selectPlans.Select(newPlans))
+        currentPlans = currentPlans.concat(selectPlans.Select(newPlans))
         
         // Execute the current plans
         executePlans.Execute(currentPlans)
+        
+        this._SerialiseCurrentPlans(currentPlans)
     },
     
-    _DebugPrint: function(object)
+    _DebugPrint: function(object, tabs)
     {
         var this_cpy = this
-         
+        var tabs = "  "
+        for (i=0; i<tabs; i++)
+        {
+            tabs = tabs + "  "
+        }
+        
         var str = ""
         _.forEach(object, function(val, name) 
         {
             if (typeof(val) == 'object')
             {
-               var str2 = this_cpy._DebugPrint(val)
-               str += " " + name + ": \n" + str2
+               var str2 = this_cpy._DebugPrint(val, tabs + 1)
+               str += tabs + name + ": \n" + tabs + str2
             }
             else
-                str = " " + name + ": " + val
+                str += tabs + name + ": " + val + "\n" + tabs
         });
         
         return str
@@ -86,7 +93,9 @@ module.exports = {
                 
                 results.Rooms[room] = 
                 {
-                    EnergyAvailable: room.energyAvailable
+                    EnergyAvailable: room.energyAvailable,
+                    NumberMyCreeps: room.find(FIND_MY_CREEPS).length,
+                    NumberEnemiesCreeps: room.find(FIND_HOSTILE_CREEPS).length
                 }
             }
         });
@@ -99,25 +108,60 @@ module.exports = {
             results.NumberOfCreeps += 1
         }
         
-		 
-		 
         // Debugging
         if (this._Debugging == true)
         {
+            console.log("----- World State -----")
             var this_cpy = this
             _.forEach(results, function(val, name) 
             {
                 if (typeof(val) == 'object')
                 {
-                   var str = this_cpy._DebugPrint(val)
+                   var str = this_cpy._DebugPrint(val, 1)
                    console.log(" " + name + ": \n" + str)
                 }
                 else
                     console.log(" " + name + ": " + val)
             });
+            console.log("-----------------------")
         }
         
         return results
-    }
+    },
     
+    _SerialiseCurrentPlans: function(currentPlans)
+    {
+        if (this._Debugging)
+        {
+            currentPlans.forEach(function(item)
+            {
+                console.log("CurrentPlans: " + item)
+            });
+        }
+        
+        Memory.HiveMind.CurrentPlans = []
+        
+        currentPlans.forEach(function(item)
+        {
+            var savedPlan = 
+            {
+                PlanId: item.GetId(),
+                Data: item.GetSerializedData()
+            }
+            Memory.HiveMind.CurrentPlans.push(savedPlan)    
+        });
+
+    },
+    
+    _DeserialiseCurrentPlans: function()
+    {
+        var plans = []
+        
+        Memory.HiveMind.CurrentPlans.forEach(function(item)
+        {
+            plans.push(AIPlans.AIPlans[item.PlanId])
+        });
+        
+        return plans
+    }
 };
