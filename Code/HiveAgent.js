@@ -108,6 +108,9 @@ module.exports = {
             results.NumberOfCreeps += 1
         }
         
+        results.CreepInRoles = {}
+        results.CreepInRoles.CREEP_HARVESTERS = 0
+        
         // Debugging
         if (this._Debugging == true)
         {

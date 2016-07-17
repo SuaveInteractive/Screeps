@@ -5,7 +5,7 @@ module.exports = {
     Calculate: function (world)
     {
 		return	{
-					UtilType: utilityTypes.UTILITY_ENERGY_RESERVES, 
+					UtilType: 'ENERGY', 
 					Value: 1.0
 				}
     }

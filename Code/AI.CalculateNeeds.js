@@ -1,9 +1,5 @@
-
-var utilityTypes = require('Utility.Types');
-var utilityEnergy = require('Utility.Energy');
-var utilityEnergyIncome = require('Utility.EnergyIncome');
-
-var utilities = [utilityEnergy, utilityEnergyIncome]
+var AIPlans = require('Plans');
+var Utilities = require('Utilities');
 
 module.exports = {
 	_Debugging: true,
@@ -14,22 +10,46 @@ module.exports = {
 			console.log("AI.CalculateNeeds -> Calculate")
 		
         var needs = {}
-        _.forEach(utilityTypes, function(util) {
-            needs[util] = 0;
-        });
-        
-        _.forEach(utilities, function(utility)
+        for(var key in Utilities.UtiliesDef) 
         {
+            needs[key] = 0;
+        };
+        
+        // Calculate what we need
+        for(var key in Utilities.UtiliesDef) 
+        {
+            var utility = Utilities.UtiliesDef[key]
             var result = utility.Calculate(world)
             needs[result.UtilType] = needs[result.UtilType] + result.Value
-        });
+        }
         
+        // Remove what we have incoming via other plans
+    	for (var i in plans)
+		{
+		    var plan = plans[i]
+		    var utilityServerd = plan.GetUtilitiesServed()
+		    
+		    for (var j in utilityServerd)
+		    {
+	            var utility = Utilities.UtiliesDef[utilityServerd[j]]
+		        var result = plan.GetFinisedResult()
+		        
+		        for (var k in result)
+		        {
+		            var util = result[k]
+		            needs[util.UtilType] = needs[util.UtilType] - util.Value
+		        }
+		    }
+		}
 
         if (this._Debugging)
         {
-            _.forEach(utilityTypes, function(util) {
-               console.log(util + ": " + needs[util]);
-            });
+            console.log("Utility Needs:")
+            for(var key in Utilities.UtiliesDef) 
+            {
+                var utility = Utilities.UtiliesDef[key]
+                console.log("  " + key + ": " + needs[key]);
+            };
         }
 		
 		return needs

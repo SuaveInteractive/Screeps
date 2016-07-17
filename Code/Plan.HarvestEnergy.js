@@ -1,4 +1,3 @@
-var plansId = require('PlansId');
 var utilityTypes = require('Utility.Types');
 
 module.exports = {
@@ -6,7 +5,7 @@ module.exports = {
 	
 	GetUtilitiesServed: function()
 	{
-	    var utilityServed = [utilityTypes.UTILITY_ENERGY_INCOMING]
+	    var utilityServed = ['ENERGY_INCOME']
 	    return utilityServed
 	},
 	
@@ -15,6 +14,19 @@ module.exports = {
 	    return 'HARVEST_ENERGY'
 	},
 	
+	GetFinisedResult: function()
+	{
+	 //   var results = {}
+ //       results.CreepInRoles = {}
+//        results.CreepInRoles.CREEP_HARVESTERS = 1
+
+        //Utilities.UtiliesDef
+	    return  [{
+	                UtilType: 'ENERGY_INCOME',
+	                Value: 1
+                }]
+    },
+    
 	GetSerializedData: function()
 	{
 	    return {}
@@ -25,5 +37,4 @@ module.exports = {
 		if (this._Debugging)
 			console.log("Plan.HarvestEnergy -> run")
 	}
-	
 };

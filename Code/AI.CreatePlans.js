@@ -10,7 +10,7 @@ module.exports = {
 	
 	    var this_cpy = this
 	    var plans = []		
-		_.forEach(needs, function(need, needValue) 
+		_.forEach(needs, function(needValue, need) 
 		{
 		    if (needValue > 0)
 		    {
@@ -38,6 +38,7 @@ module.exports = {
 		{
 		    var plan = AIPlans.AIPlans[key]
 		    var utilitiesServed = plan.GetUtilitiesServed()
+		    
 		    _.forEach(utilitiesServed, function(util) 
 		    {
 		        if (utilitiesServed == util)
