@@ -1,16 +1,28 @@
-var plans = require('Plans');
+var AIPlans = require('Plans');
 
 module.exports = {
     _Debugging: true,
     
     Execute: function (plans)
     {
-		if (this._Debugging)
-			console.log("AI.ExecutePlans -> Select")
+        var debugging = this._Debugging
+		if (debugging)
+			console.log("AI.ExecutePlans -> Execute")
 			
-		plans.forEach(function(plan, index, array)
+    	for (var key in AIPlans.AIPlans)
 		{
-		    plans[plan.GetId()].Run()
-		});
+		    var plan = AIPlans.AIPlans[key]
+		    if (plan)
+		    {
+        		if (debugging)
+    			    console.log("  Plan Id: " + plan.GetId())
+    			    
+    		    AIPlans.AIPlans[plan.GetId()].Run()
+		    }
+		    else
+		    {
+		        console.log ("### WARNING, plan [" + key + "] not found ###")
+		    }
+		}
     }
 };

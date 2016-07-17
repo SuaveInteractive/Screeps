@@ -6,7 +6,7 @@ var utilityEnergyIncome = require('Utility.EnergyIncome');
 var utilities = [utilityEnergy, utilityEnergyIncome]
 
 module.exports = {
-	_Debugging: false,
+	_Debugging: true,
 	
     Calculate: function (world, plans)
     {

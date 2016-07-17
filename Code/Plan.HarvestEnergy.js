@@ -2,7 +2,7 @@ var plansId = require('PlansId');
 var utilityTypes = require('Utility.Types');
 
 module.exports = {
-	_Debugging: true,
+	_Debugging: false,
 	
 	GetUtilitiesServed: function()
 	{
@@ -12,7 +12,7 @@ module.exports = {
 	
 	GetId: function()
 	{
-	    return plansId.PLAN_HARVEST_ENERGY
+	    return 'HARVEST_ENERGY'
 	},
 	
 	GetSerializedData: function()

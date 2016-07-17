@@ -132,10 +132,12 @@ module.exports = {
     _SerialiseCurrentPlans: function(currentPlans)
     {
         if (this._Debugging)
-        {
+        {   
+            var index = 1;
             currentPlans.forEach(function(item)
             {
-                console.log("CurrentPlans: " + item)
+                console.log("CurrentPlan[" + index + "]: " + item);
+                index += 1;
             });
         }
         

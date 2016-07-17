@@ -33,9 +33,10 @@ module.exports = {
     _GetPlansForUtility: function(util)
     {
         var plans = []
-        
-    	AIPlans.AIPlans.forEach(function(plan) 
+
+    	for (var key in AIPlans.AIPlans)
 		{
+		    var plan = AIPlans.AIPlans[key]
 		    var utilitiesServed = plan.GetUtilitiesServed()
 		    _.forEach(utilitiesServed, function(util) 
 		    {
@@ -45,7 +46,7 @@ module.exports = {
 		        }
 		    });
 		    
-		});
+		}
         
         return plans
     }
