@@ -2,7 +2,7 @@ var AIPlans = require('Plans');
 var Utilities = require('Utilities');
 
 module.exports = {
-	_Debugging: true,
+	_Debugging: false,
 	
     Calculate: function (world, plans)
     {

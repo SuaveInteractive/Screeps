@@ -1,7 +1,7 @@
 var utilityTypes = require('Utility.Types');
 
 module.exports = {
-	_Debugging: false,
+	_Debugging: true,
 	
 	GetUtilitiesServed: function()
 	{
@@ -16,11 +16,6 @@ module.exports = {
 	
 	GetFinisedResult: function()
 	{
-	 //   var results = {}
- //       results.CreepInRoles = {}
-//        results.CreepInRoles.CREEP_HARVESTERS = 1
-
-        //Utilities.UtiliesDef
 	    return  [{
 	                UtilType: 'ENERGY_INCOME',
 	                Value: 1

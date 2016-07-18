@@ -8,22 +8,23 @@ module.exports = {
 		if (this._Debugging)
 			console.log("AI.CreatePlans -> Create")
 	
-	    var this_cpy = this
 	    var plans = []		
-		_.forEach(needs, function(needValue, need) 
+		for(var need in needs) 
 		{
+		    var needValue = needs[i]
 		    if (needValue > 0)
 		    {
-		        var newPlans = this_cpy._GetPlansForUtility(need)
+		        var newPlans = this._GetPlansForUtility(need)
 		        plans = plans.concat(newPlans)
 		    }
-		});
+		}
 		
 		if (this._Debugging == true)
 		{
+		    console.log("New plans:")
 		    plans.forEach(function(item, index, array)
 		    {
-		        console.log("Plan: " + item)
+		        console.log("  Plan: " + item)
 		    });
 		}
 		
