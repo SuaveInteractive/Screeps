@@ -1,7 +1,7 @@
 
 module.exports = {
-    SpawnCreep: function()
+    SpawnCreep: function(room)
     {
-        Room.S
+        Room.prototype
     }
 };

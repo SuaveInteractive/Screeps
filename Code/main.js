@@ -2,11 +2,14 @@
 var roomHelper = require('RoomHelper');
 var hiveAgent = require('HiveAgent');
 
-module.exports.loop = function () {
-    for (var i in Game.spawns) 
+module.exports = {
+    loop: function () 
     {
-        roomHelper.ParseRoom(Game.spawns[i].room)
-    }
+        for (var i in Game.spawns) 
+        {
+            roomHelper.ParseRoom(Game.spawns[i].room)
+        }
 
-    hiveAgent.Run();
-}
+        hiveAgent.Run();
+    },
+};

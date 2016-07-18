@@ -14,6 +14,7 @@ module.exports = {
 
         Memory.ParsedRooms[room] = {};
 
+        // ****** SOURCES *****
         Memory.ParsedRooms[room].Sources = {};
         var sources = room.find(FIND_SOURCES)
         _.forEach(sources, function (source)
@@ -50,7 +51,19 @@ module.exports = {
             console.log("SOURCE ACTIVE" + i)
         }
         */
-
+        
+        // ****** STRUCTURES *****
+        Memory.ParsedRooms[room].Spawns = {}
+        
+        var myStructures = room.find(FIND_MY_STRUCTURES)
+        myStructures.forEach(function(struct)
+        {
+            if (struct.structureType == STRUCTURE_SPAWN)
+            {
+                Memory.ParsedRooms[room].Spawns[struct.id] = struct
+            }
+        });
+        
         // DEBUG
         if (_Debugging)
         {
@@ -63,6 +76,16 @@ module.exports = {
                     console.log("  Harvester Positions: " + harvesterPositions)
                 });
             });
+            
+            console.log("Structures:")
+            if (Memory.ParsedRooms[room].Spawns)
+            {
+                console.log("  Spawns:")
+                for (var spawn in Memory.ParsedRooms[room].Spawns)
+                {
+                    console.log("    " + spawn)    
+                }
+            }
         }
 
          Memory.ParsedRooms[room].Parsed = true;
