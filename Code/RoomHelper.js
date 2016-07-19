@@ -67,13 +67,14 @@ module.exports = {
         // DEBUG
         if (_Debugging)
         {
+            console.log("Sources:")
             _.forEach(Memory.ParsedRooms[room].Sources, function (source) 
             {
-                console.log("Source Pos: " + source.sourcePos)
+                console.log("  Source Pos: " + source.sourcePos)
 
                 _.forEach(source.HarvesterPositions, function (harvesterPositions)
                 {
-                    console.log("  Harvester Positions: " + harvesterPositions)
+                    console.log("    Harvester Positions: " + harvesterPositions)
                 });
             });
             
@@ -89,6 +90,15 @@ module.exports = {
         }
 
          Memory.ParsedRooms[room].Parsed = true;
+    },
+    
+    GetStructures: function(room, structure)
+    {
+        if (!this.HasRoomBeenParsed(room))
+            return
+            
+        if (structure == STRUCTURE_SPAWN)
+            return Memory.ParsedRooms[room].Spawns
     },
 
     HasRoomBeenParsed: function (room)
