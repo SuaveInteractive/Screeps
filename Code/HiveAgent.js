@@ -154,10 +154,12 @@ module.exports = {
         
         currentPlans.forEach(function(item)
         {
+            var data = item.GetSerializedData()
+
             var savedPlan = 
             {
                 PlanId: item.GetId(),
-                Data: item.GetSerializedData()
+                Data: data
             }
             Memory.HiveMind.CurrentPlans.push(savedPlan)    
         });
@@ -170,7 +172,11 @@ module.exports = {
         
         Memory.HiveMind.CurrentPlans.forEach(function(item)
         {
-            plans.push(new AIPlans.AIPlans[item.PlanId])
+            var plan = new AIPlans.AIPlans[item.PlanId]
+            
+            plan.Load(item.Data)
+            
+            plans.push(plan)
         });
         
         return plans

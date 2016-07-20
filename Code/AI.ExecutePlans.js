@@ -14,8 +14,6 @@ module.exports = {
     	for (var i in plans)
 		{
 		    var plan = plans[i]
-		    
-		    console.log(" - plan: " + plan)
 
     		if (debugging)
 			    console.log("  Plan Id: " + plan.GetId())

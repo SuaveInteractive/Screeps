@@ -3,15 +3,15 @@ var recruiter = require('Recruiter');
 var Plan = require('Plan');
 
 // ##### Object ######
-//var HarvestEnergy = Object.create(Plan.Plan)
-
 HarvestEnergy._Debugging = true
+HarvestEnergy._super_ = Object.create(Plan.Plan)
 
 function HarvestEnergy()
 {
+
 }
 
-HarvestEnergy.prototype = Object.create(Plan.Plan)
+HarvestEnergy.prototype = Object.create(Plan.Plan.prototype)
 
 HarvestEnergy.prototype.GetUtilitiesServed = function()
 {
@@ -34,8 +34,8 @@ HarvestEnergy.prototype.GetFinisedResult = function()
 
 HarvestEnergy.prototype.GetSerializedData = function()
 {
-    console.log("HarvestEnergy.GetSerializedData")
-   // return Plan.GetSerializedData(this)
+    var data = Plan.Plan.prototype.GetSerializedData.call(this)
+    return data
 }
 
 HarvestEnergy.prototype.Run = function(state)
@@ -53,6 +53,12 @@ HarvestEnergy.prototype.Run = function(state)
 	    recruiter.SpawnCreep(Game.rooms[this.GetPlanRoomName()])
 	}
 }
+
+HarvestEnergy.prototype.toString = function()
+{
+    return "HarvestEnergy"
+}
+
 
 // ##### Exports ######
 module.exports = {
