@@ -3,7 +3,7 @@ var harvestEnergy = require('Plan.HarvestEnergy');
 module.exports = {
     AIPlans: 
     {
-        'HARVEST_ENERGY': harvestEnergy
+        'HARVEST_ENERGY': harvestEnergy.HarvestEnergy
     }
 };
 

@@ -20,29 +20,35 @@ module.exports = {
     Run: function ()
     {
         console.log("HiveAgent - Run");
+        
         var colonyState = this.CalculateColonyState()
-        
-        var currentPlans = this._DeserialiseCurrentPlans()
-        
-        // Test to see if any current plans should be removed
-        currentPlans = evalPlans.Evaluate(currentPlans)
-        
-        // Calaculate the needs of the Colony based on the current plans
-        var needs = calculateNeeds.Calculate(colonyState, currentPlans)
-        
-        // Create new plans based on needs
-        var newPlans = createPlans.Create(needs)
-        
-        // Prioritise the plans based of Hive Mind Personallity
-        newPlans = prioritisePlans.Prioritise(newPlans)
-        
-        // Select new plans and add them to the current plans
-        currentPlans = currentPlans.concat(selectPlans.Select(newPlans))
-        
-        // Execute the current plans
-        executePlans.Execute(currentPlans)
-        
-        this._SerialiseCurrentPlans(currentPlans)
+                    
+        for (var roomName in Game.rooms)
+        {
+            var room = Game.rooms[roomName]
+            
+            var currentPlans = this._DeserialiseCurrentPlans()
+            
+            // Test to see if any current plans should be removed
+            currentPlans = evalPlans.Evaluate(currentPlans)
+            
+            // Calaculate the needs of the Colony based on the current plans
+            var needs = calculateNeeds.Calculate(colonyState, currentPlans)
+            
+            // Create new plans based on needs
+            var newPlans = createPlans.Create(needs)
+            
+            // Prioritise the plans based of Hive Mind Personallity
+            newPlans = prioritisePlans.Prioritise(newPlans)
+            
+            // Select new plans and add them to the current plans
+            currentPlans = currentPlans.concat(selectPlans.Select(room, newPlans))
+            
+            // Execute the current plans
+            executePlans.Execute(currentPlans)
+            
+            this._SerialiseCurrentPlans(currentPlans)
+        }
     },
     
     _DebugPrint: function(object, tabs)
@@ -164,7 +170,7 @@ module.exports = {
         
         Memory.HiveMind.CurrentPlans.forEach(function(item)
         {
-            plans.push(AIPlans.AIPlans[item.PlanId])
+            plans.push(new AIPlans.AIPlans[item.PlanId])
         });
         
         return plans

@@ -1,7 +1,9 @@
 var AIPlans = require('Plans');
 
+var roomHelper = require('RoomHelper');
+
 module.exports = {
-    _Debugging: false,
+    _Debugging: true,
     
     Execute: function (plans)
     {
@@ -9,20 +11,16 @@ module.exports = {
 		if (debugging)
 			console.log("AI.ExecutePlans -> Execute")
 			
-    	for (var key in AIPlans.AIPlans)
+    	for (var i in plans)
 		{
-		    var plan = AIPlans.AIPlans[key]
-		    if (plan)
-		    {
-        		if (debugging)
-    			    console.log("  Plan Id: " + plan.GetId())
-    			    
-    		    AIPlans.AIPlans[plan.GetId()].Run()
-		    }
-		    else
-		    {
-		        console.log ("### WARNING, plan [" + key + "] not found ###")
-		    }
+		    var plan = plans[i]
+		    
+		    console.log(" - plan: " + plan)
+
+    		if (debugging)
+			    console.log("  Plan Id: " + plan.GetId())
+			
+		    plan.Run()
 		}
     }
 };

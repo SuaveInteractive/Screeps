@@ -1,16 +1,18 @@
 module.exports = {
 	_Debugging: false,
     
-    Select: function (plans)
+    Select: function (room, plans)
     {
 		if (this._Debugging)
 			console.log("AI.SelectPlan -> Select")
 		
 		var selectedPlans = []
 		
-		plans.forEach(function(item, index, array)
+		plans.forEach(function(plan, index, array)
 		{
-		    selectedPlans.push(item)
+		    plan.SetPlanRoomName(room.name)
+		    
+		    selectedPlans.push(plan)
 		});
 		
         return selectedPlans;

@@ -11,7 +11,8 @@ module.exports = {
 	    var plans = []		
 		for(var need in needs) 
 		{
-		    var needValue = needs[i]
+		    var needValue = needs[need]
+
 		    if (needValue > 0)
 		    {
 		        var newPlans = this._GetPlansForUtility(need)
@@ -37,7 +38,8 @@ module.exports = {
 
     	for (var key in AIPlans.AIPlans)
 		{
-		    var plan = AIPlans.AIPlans[key]
+		    var plan = new AIPlans.AIPlans[key]
+
 		    var utilitiesServed = plan.GetUtilitiesServed()
 		    
 		    _.forEach(utilitiesServed, function(util) 

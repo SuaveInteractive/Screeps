@@ -2,7 +2,7 @@ var AIPlans = require('Plans');
 var Utilities = require('Utilities');
 
 module.exports = {
-	_Debugging: false,
+	_Debugging: true,
 	
     Calculate: function (world, plans)
     {
@@ -20,6 +20,7 @@ module.exports = {
         {
             var utility = Utilities.UtiliesDef[key]
             var result = utility.Calculate(world)
+            
             needs[result.UtilType] = needs[result.UtilType] + result.Value
         }
         
@@ -27,6 +28,9 @@ module.exports = {
     	for (var i in plans)
 		{
 		    var plan = plans[i]
+		    
+		    console.log(" + plan: " + plan)
+		    
 		    var utilityServerd = plan.GetUtilitiesServed()
 		    
 		    for (var j in utilityServerd)
