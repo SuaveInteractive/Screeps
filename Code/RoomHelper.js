@@ -28,11 +28,14 @@ module.exports = {
             {
                 _.forEach(col, function (cell, x)
                 {
-                    for (i = 0; i < cell.length; i++)
+                    if (sourcePos.x != x && sourcePos.y != y)
                     {
-                        if (cell == "plain")
+                        for (i = 0; i < cell.length; i++)
                         {
-                            harvesterPositions.push(new RoomPosition(x, y, room.name));
+                        if (cell == "plain" || cell == "swamp")
+                            {
+                                harvesterPositions.push(new RoomPosition(x, y, room.name));
+                            }
                         }
                     }
                 });
@@ -61,6 +64,10 @@ module.exports = {
             if (struct.structureType == STRUCTURE_SPAWN)
             {
                 Memory.ParsedRooms[room].Spawns[struct.id] = struct
+            }
+            else if (struct.structureType == STRUCTURE_CONTROLLER)
+            {
+                Memory.ParsedRooms[room].Controller = struct
             }
         });
         

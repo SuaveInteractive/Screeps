@@ -18,7 +18,7 @@ module.exports = {
         // Calculate what we need
         for(var key in Utilities.UtiliesDef) 
         {
-            var utility = Utilities.UtiliesDef[key]
+            var utility = new Utilities.UtiliesDef[key]
             var result = utility.Calculate(world)
             
             needs[result.UtilType] = needs[result.UtilType] + result.Value

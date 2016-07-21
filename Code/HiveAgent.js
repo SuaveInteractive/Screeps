@@ -12,16 +12,21 @@ var executePlans = require('AI.ExecutePlans');
 var prioritisePlans = require('AI.PrioritisePlans');
 var selectPlans = require('AI.SelectPlans');
 var AIPlans = require('Plans');
+
+var worldState = require('WorldState');
     
 module.exports = {
-    _Debugging: false,
+    _Debugging: true,
     _Player: "Manix",
 	 
     Run: function ()
     {
         console.log("HiveAgent - Run");
         
-        var colonyState = this.CalculateColonyState()
+        //var colonyState = this.CalculateColonyState()
+        var ws = new worldState.WorldState()
+        var colonyState = ws.CalculateColonyState(this._Player)
+        console.log("colonyState: " + ws)
                     
         for (var roomName in Game.rooms)
         {
@@ -50,7 +55,7 @@ module.exports = {
             this._SerialiseCurrentPlans(currentPlans)
         }
     },
-    
+    /*
     _DebugPrint: function(object, tabs)
     {
         var this_cpy = this
@@ -73,8 +78,8 @@ module.exports = {
         });
         
         return str
-    },
-	 	 
+    },*/
+	 	 /*
     CalculateColonyState: function()
     {
         var results = {}
@@ -136,7 +141,7 @@ module.exports = {
         }
         
         return results
-    },
+    },*/
     
     _SerialiseCurrentPlans: function(currentPlans)
     {

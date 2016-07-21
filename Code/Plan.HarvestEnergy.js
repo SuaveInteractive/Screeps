@@ -3,7 +3,6 @@ var recruiter = require('Recruiter');
 var Plan = require('Plan');
 
 // ##### Object ######
-
 function HarvestEnergy()
 {
     this._Debugging = true
@@ -90,7 +89,6 @@ HarvestEnergy.prototype.toString = function()
 {
     return "HarvestEnergy"
 }
-
 
 // ##### Exports ######
 module.exports = {
