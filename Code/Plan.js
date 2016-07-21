@@ -1,30 +1,30 @@
 // ##### Object ######
-Plan._Debugging = true
+Plan._Debugging = false
 
 function Plan()
 {
-    this.PlanRoom = ""
+    this._PlanRoomName = ""
 }
 
 Plan.prototype.GetPlanRoomName = function()
 {
-    return this.PlanRoomName
+    return this._PlanRoomName
 }
 
 Plan.prototype.SetPlanRoomName = function(roomName)
 {
-    this.PlanRoomName = roomName
+    this._PlanRoomName = roomName
 }
 
-Plan.prototype.GetSerializedData = function()
+Plan.prototype.SerializedData = function()
 {
-    var data = {PlanRoomName: this.PlanRoomName}
+    var data = {PlanRoomName: this._PlanRoomName}
     return data
 }
 
-Plan.prototype.Load = function(memory)
+Plan.prototype.DeserializedData = function(data)
 {
-    this.PlanRoomName = memory.PlanRoomName
+    this._PlanRoomName = data.PlanRoomName
 }
 
 Plan.prototype.toString = function()

@@ -13,6 +13,9 @@ module.exports = {
 		{
 		    var needValue = needs[need]
 
+		    if (this._Debugging)
+			    console.log("  need: " + need + ", needValue: " + needValue)
+
 		    if (needValue > 0)
 		    {
 		        var newPlans = this._GetPlansForUtility(need)
@@ -32,7 +35,7 @@ module.exports = {
 		return plans
     },
     
-    _GetPlansForUtility: function(util)
+    _GetPlansForUtility: function(neededUtil)
     {
         var plans = []
 
@@ -44,7 +47,7 @@ module.exports = {
 		    
 		    _.forEach(utilitiesServed, function(util) 
 		    {
-		        if (utilitiesServed == util)
+		        if (neededUtil == util)
 		        {
 		            plans.push(plan)
 		        }

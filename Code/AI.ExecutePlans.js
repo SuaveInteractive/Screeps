@@ -3,7 +3,7 @@ var AIPlans = require('Plans');
 var roomHelper = require('RoomHelper');
 
 module.exports = {
-    _Debugging: true,
+    _Debugging: false,
     
     Execute: function (plans)
     {

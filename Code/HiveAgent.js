@@ -154,7 +154,7 @@ module.exports = {
         
         currentPlans.forEach(function(item)
         {
-            var data = item.GetSerializedData()
+            var data = item.SerializedData()
 
             var savedPlan = 
             {
@@ -174,7 +174,7 @@ module.exports = {
         {
             var plan = new AIPlans.AIPlans[item.PlanId]
             
-            plan.Load(item.Data)
+            plan.DeserializedData(item.Data)
             
             plans.push(plan)
         });
