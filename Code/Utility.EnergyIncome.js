@@ -4,11 +4,22 @@ function UtilityEnergyIncoming()
     this._Debugging = true
 }
 
-UtilityEnergyIncoming.prototype.Calculate = function(world)
+UtilityEnergyIncoming.prototype.Calculate = function(room, worldState)
 {
+    var roomLevel = worldState.Rooms[room].RoomControllerLevel
+    var energyAvailable = worldState.Rooms[room].EnergyAvailable
+    var numberOfHarvesters = worldState.CreepInRoles.CREEP_HARVESTERS
+    
+    var result = 0.0
+    
+    if (numberOfHarvesters < 3 && energyAvailable > 0)
+        result = 1.0
+        
+    console.log("result: " + result)
+    
 	return	{
 				UtilType: 'ENERGY_INCOME', 
-				Value: 1.0
+				Value: result
 			}
 }
 

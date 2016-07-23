@@ -1,10 +1,12 @@
 var AIPlans = require('Plans');
 var Utilities = require('Utilities');
 
+var worldState = require('WorldState');
+
 module.exports = {
-	_Debugging: false,
+	_Debugging: true,
 	
-    Calculate: function (world, plans)
+    Calculate: function (room, world, plans)
     {
 		if (this._Debugging)
 			console.log("AI.CalculateNeeds -> Calculate")
@@ -19,12 +21,19 @@ module.exports = {
         for(var key in Utilities.UtiliesDef) 
         {
             var utility = new Utilities.UtiliesDef[key]
-            var result = utility.Calculate(world)
+            var result = utility.Calculate(room, world)
             
             needs[result.UtilType] = needs[result.UtilType] + result.Value
         }
         
         // Remove what we have incoming via other plans
+        
+        // TEMP - What the world state will look like after all the plans run
+        var ws = new worldState.WorldState()
+        ws.CalculateColonyState("Manix")
+        
+        console.log("START: " + ws)
+    	
     	for (var i in plans)
 		{
 		    var plan = plans[i]
@@ -34,15 +43,17 @@ module.exports = {
 		    for (var j in utilityServerd)
 		    {
 	            var utility = Utilities.UtiliesDef[utilityServerd[j]]
-		        var result = plan.GetFinisedResult()
+		        var result = plan.GetFinisedResult(room, ws)
 		        
 		        for (var k in result)
 		        {
 		            var util = result[k]
-		            needs[util.UtilType] = needs[util.UtilType] - util.Value
+		            needs[util.UtilType] = needs[util.UtilType] - (1.0 - util.Value)
 		        }
 		    }
 		}
+		
+		console.log("END: " + ws)
 
         if (this._Debugging)
         {

@@ -2,6 +2,9 @@
 var recruiter = require('Recruiter');
 var Plan = require('Plan');
 
+var worldState = require('WorldState');
+var energyIncome = require('Utility.EnergyIncome');
+
 // ##### Object ######
 function HarvestEnergy()
 {
@@ -21,12 +24,17 @@ HarvestEnergy.prototype.GetId = function()
     return 'HARVEST_ENERGY'
 }
 
-HarvestEnergy.prototype.GetFinisedResult = function()
+HarvestEnergy.prototype.GetFinisedResult = function(room, worldState)
 {
-    return  [{
-                UtilType: 'ENERGY_INCOME',
-                Value: 1
-            }]
+    var result = []
+    
+    var util = new energyIncome.UtilityEnergyIncoming()
+    
+    worldState.CreepInRoles.CREEP_HARVESTERS += 1
+    
+    result.push(util.Calculate(room, worldState))
+    
+    return result
 }
 
 HarvestEnergy.prototype.SerializedData = function()

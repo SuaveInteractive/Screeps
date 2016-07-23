@@ -33,6 +33,7 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             
             this.Rooms[room] = 
             {
+                RoomControllerLevel: room.controller.level,
                 EnergyAvailable: room.energyAvailable,
                 NumberMyCreeps: room.find(FIND_MY_CREEPS).length,
                 NumberEnemiesCreeps: room.find(FIND_HOSTILE_CREEPS).length
@@ -54,7 +55,7 @@ WorldState.prototype.CalculateColonyState = function(playerName)
 WorldState.prototype.toString = function()
 {
     var str = "\n"
-    str +=  "----- World State -----"
+    str +=  "----- World State -----\n"
 
     var this_cpy = this
     _.forEach(this, function(val, key)
