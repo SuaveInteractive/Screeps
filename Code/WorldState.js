@@ -49,6 +49,9 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             this.NumberOfCreepsSpawing += 1
         else
             this.NumberOfCreeps += 1
+            
+        if (creep.memory.role == 'harvester')
+            this.CreepInRoles.CREEP_HARVESTERS += 1
     }
 }
 

@@ -14,6 +14,9 @@ var selectPlans = require('AI.SelectPlans');
 var AIPlans = require('Plans');
 
 var worldState = require('WorldState');
+
+var resouceAssigner = require('ResourceAssigner')
+
     
 module.exports = {
     _Debugging: true,
@@ -21,7 +24,7 @@ module.exports = {
 	 
     Run: function ()
     {
-        console.log("HiveAgent - Run");
+        console.log("\nHiveAgent - Run");
         
         var ws = new worldState.WorldState()
         ws.CalculateColonyState(this._Player)
@@ -29,6 +32,8 @@ module.exports = {
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName]
+            
+            resouceAssigner.UpdateCreeps(room)
             
             var currentPlans = this._DeserialiseCurrentPlans()
             

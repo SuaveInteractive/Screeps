@@ -16,7 +16,7 @@ module.exports = {
 		    if (this._Debugging)
 			    console.log("  need: " + need + ", needValue: " + needValue)
 
-		    if (needValue > 0)
+		    if (needValue > 0.0001)
 		    {
 		        var newPlans = this._GetPlansForUtility(need)
 		        plans = plans.concat(newPlans)

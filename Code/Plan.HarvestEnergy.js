@@ -4,11 +4,14 @@ var Plan = require('Plan');
 
 var worldState = require('WorldState');
 var energyIncome = require('Utility.EnergyIncome');
+var resourceAssigner = require('ResourceAssigner');
 
 // ##### Object ######
 function HarvestEnergy()
 {
-    this._Debugging = true
+    Plan.Plan.call(this)
+    
+    this._Debugging = false
 }
 
 HarvestEnergy.prototype = Object.create(Plan.Plan.prototype)
@@ -61,6 +64,8 @@ HarvestEnergy.prototype.Run = function(state)
 	var creepHarvester = null
 	if (this._SpawningCreepName)
 	    creepHarvester = Game.creeps[this._SpawningCreepName]
+    
+    var room = Game.rooms[this.GetPlanRoomName()]
 		
 	if (creepHarvester)
 	{
@@ -71,10 +76,13 @@ HarvestEnergy.prototype.Run = function(state)
         }
         else
         {
+            var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, creepHarvester.pos)
             creepHarvester.memory.role = 'harvester'
+            creepHarvester.memory.harvestTargetId = miningSiteId
             
-	        if (this._Debugging)
-	            console.log("CAN DO STUFF WITH THE CREEP NOW")
+            resourceAssigner.AssignCreepToSite(room, creepHarvester, miningSiteId)
+            
+	        this.SetFinished(true)
         }
 	}
 	else
@@ -84,7 +92,7 @@ HarvestEnergy.prototype.Run = function(state)
 	    if (_.isString(result))
 	    {
 	        this._SpawningCreepName = result
-	        console.log("SPAWING NEW CREEP")
+            console.log("SPAWING NEW CREEP")
 	    }
 	    else
 	    {
