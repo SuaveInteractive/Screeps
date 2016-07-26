@@ -28,7 +28,7 @@ module.exports = {
         
         var ws = new worldState.WorldState()
         ws.CalculateColonyState(this._Player)
-
+        
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName]
