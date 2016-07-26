@@ -7,7 +7,7 @@ var energyIncome = require('Utility.EnergyIncome');
 var resourceAssigner = require('ResourceAssigner');
 
 // ##### Object ######
-function HarvestEnergy()
+function HarvestEnergy(room)
 {
     Plan.Plan.call(this)
     

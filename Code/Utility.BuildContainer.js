@@ -6,8 +6,6 @@ function UtilityBuildContainer()
 
 UtilityBuildContainer.prototype.Calculate = function(room, worldState)
 {
-    console.log(worldState)
-    
     var availableStructures = worldState.Rooms[room].AvailableStructures
     var numberOfContainersAvailable = availableStructures.container
     var numberOfHarvesters = worldState.CreepInRoles.CREEP_HARVESTERS
@@ -16,8 +14,6 @@ UtilityBuildContainer.prototype.Calculate = function(room, worldState)
     
     if (numberOfHarvesters >= 3)
         result = numberOfContainersAvailable / 5
-        
-    console.log(" UtilityBuildContainer: " + result)
         
 	return	{
 				UtilType: 'BUILD_CONTAINER', 

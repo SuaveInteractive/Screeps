@@ -35,7 +35,7 @@ module.exports = {
             
             resouceAssigner.UpdateCreeps(room)
             
-            var currentPlans = this._DeserialiseCurrentPlans()
+            var currentPlans = this._DeserialiseCurrentPlans(room)
             
             // Test to see if any current plans should be removed
             currentPlans = evalPlans.Evaluate(currentPlans)
@@ -44,7 +44,7 @@ module.exports = {
             var needs = calculateNeeds.Calculate(room, ws, currentPlans)
             
             // Create new plans based on needs
-            var newPlans = createPlans.Create(needs)
+            var newPlans = createPlans.Create(room, needs)
             
             // Prioritise the plans based of Hive Mind Personallity
             newPlans = prioritisePlans.Prioritise(newPlans)
@@ -87,13 +87,13 @@ module.exports = {
 
     },
     
-    _DeserialiseCurrentPlans: function()
+    _DeserialiseCurrentPlans: function(room)
     {
         var plans = []
         
         Memory.HiveMind.CurrentPlans.forEach(function(item)
         {
-            var plan = new AIPlans.AIPlans[item.PlanId]
+            var plan = new AIPlans.AIPlans[item.PlanId](room)
             
             plan.DeserializedData(item.Data)
             

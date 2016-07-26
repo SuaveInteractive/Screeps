@@ -3,6 +3,7 @@ var roomHelper = require('RoomHelper');
 var hiveAgent = require('HiveAgent');
 
 var roleHarvester = require('CreepRole.Harvester');
+var roleBuilder = require('CreepRole.Builder');
 
 module.exports = {
     loop: function () 

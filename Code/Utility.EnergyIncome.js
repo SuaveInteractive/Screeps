@@ -25,8 +25,6 @@ UtilityEnergyIncoming.prototype.Calculate = function(room, worldState)
         
     result.toFixed(2)
     
-    
-        
 	return	{
 				UtilType: 'ENERGY_INCOME', 
 				Value: result

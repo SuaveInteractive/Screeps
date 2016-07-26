@@ -6,8 +6,10 @@ var worldState = require('WorldState');
 
 var buildContainer = require('Utility.BuildContainer');
 
+var constructionSiteGenerator = require('ConstructionSiteGenerator')
+
 // ##### Object ######
-function BuildContainer()
+function BuildContainer(room)
 {
     Plan.Plan.call(this)
     
@@ -45,6 +47,9 @@ BuildContainer.prototype.SerializedData = function()
     var data = Plan.Plan.prototype.SerializedData.call(this)
     
     data.SpawningCreepName = this._SpawningCreepName
+    data.SiteId = this._SiteId
+    
+    console.log(" SerializedData: data.SiteId = " + data.SiteId)
     
     return data
 }
@@ -54,6 +59,9 @@ BuildContainer.prototype.DeserializedData = function(data)
     Plan.Plan.prototype.DeserializedData.call(this, data)
     
     this._SpawningCreepName = data.SpawningCreepName
+    this._SiteId = data.SiteId
+    
+    console.log(" DeserializedData: this._SiteId = " + this._SiteId)
 }
 
 BuildContainer.prototype.Run = function(state)
@@ -61,14 +69,20 @@ BuildContainer.prototype.Run = function(state)
 	if (this._Debugging)
 		console.log("Plan.BuildContainer -> run")
 
+console.log("this._SiteId: " +this._SiteId)
 
 	var builderCreep = null
 	if (this._SpawningCreepName)
 	    builderCreep = Game.creeps[this._SpawningCreepName]
     
     var room = Game.rooms[this.GetPlanRoomName()]
-		
-	if (builderCreep)
+	
+	if (this._SiteId)
+	{
+        if (this._Debugging)
+            console.log("BUILDING")
+	}
+	else if (builderCreep)
 	{
 	    if (builderCreep.spawning)
         {
@@ -77,11 +91,9 @@ BuildContainer.prototype.Run = function(state)
         }
         else
         {
-            //var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, creepHarvester.pos)
+            this._SiteId = constructionSiteGenerator.GetConstructionSite(room, STRUCTURE_CONTAINER)
             builderCreep.memory.role = 'builder'
-            //creepHarvester.memory.harvestTargetId = miningSiteId
-            
-            //resourceAssigner.AssignCreepToSite(room, creepHarvester, miningSiteId)
+            builderCreep.memory.siteId = this._SiteId
             
 	    //    this.SetFinished(true)
         }
