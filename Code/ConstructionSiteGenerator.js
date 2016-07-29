@@ -1,5 +1,5 @@
 var ConstructionSitesGenerator = {}
-ConstructionSitesGenerator._Debugging = true
+ConstructionSitesGenerator._Debugging = false
 
 if (!Memory.ConstructionSites)
 {

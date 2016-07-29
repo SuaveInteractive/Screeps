@@ -2,11 +2,11 @@
 var recruiter = require('Recruiter');
 var Plan = require('Plan');
 
-var worldState = require('WorldState');
-
-var buildContainer = require('Utility.BuildContainer');
+var buildContainer = require('Utility.BuildContainer')
 
 var constructionSiteGenerator = require('ConstructionSiteGenerator')
+
+var workTracker = require('WorkTracker')
 
 // ##### Object ######
 function BuildContainer(room)
@@ -47,9 +47,8 @@ BuildContainer.prototype.SerializedData = function()
     var data = Plan.Plan.prototype.SerializedData.call(this)
     
     data.SpawningCreepName = this._SpawningCreepName
-    data.SiteId = this._SiteId
-    
-    console.log(" SerializedData: data.SiteId = " + data.SiteId)
+    data.ConstructionSiteId = this._ConstructionSiteId
+    data.WorkId = this._WorkId
     
     return data
 }
@@ -59,9 +58,8 @@ BuildContainer.prototype.DeserializedData = function(data)
     Plan.Plan.prototype.DeserializedData.call(this, data)
     
     this._SpawningCreepName = data.SpawningCreepName
-    this._SiteId = data.SiteId
-    
-    console.log(" DeserializedData: this._SiteId = " + this._SiteId)
+    this._ConstructionSiteId = data.ConstructionSiteId
+    this._WorkId = data.WorkId
 }
 
 BuildContainer.prototype.Run = function(state)
@@ -69,48 +67,21 @@ BuildContainer.prototype.Run = function(state)
 	if (this._Debugging)
 		console.log("Plan.BuildContainer -> run")
 
-console.log("this._SiteId: " +this._SiteId)
-
-	var builderCreep = null
-	if (this._SpawningCreepName)
-	    builderCreep = Game.creeps[this._SpawningCreepName]
-    
     var room = Game.rooms[this.GetPlanRoomName()]
 	
-	if (this._SiteId)
+	if(this._WorkId != null)
 	{
-        if (this._Debugging)
-            console.log("BUILDING")
+	    var work = workTracker.GetWorkForId(room, this._WorkId)
+	    if (work && work.GetFinished())
+	        this.SetFinished(true)
 	}
-	else if (builderCreep)
+	else if (this._ConstructionSiteId)
 	{
-	    if (builderCreep.spawning)
-        {
-            if (this._Debugging)
-                console.log("SPAWING CREEP")
-        }
-        else
-        {
-            this._SiteId = constructionSiteGenerator.GetConstructionSite(room, STRUCTURE_CONTAINER)
-            builderCreep.memory.role = 'builder'
-            builderCreep.memory.siteId = this._SiteId
-            
-	    //    this.SetFinished(true)
-        }
+	    this._WorkId = workTracker.CreateWorkTask(room, 'BUILD_STRUCTURE', {SiteId: this._ConstructionSiteId})
 	}
-	else
+	else if (!this._ConstructionSiteId)
 	{
-	    // No creep so spawn one
-	    var result = recruiter.SpawnCreep(Game.rooms[this.GetPlanRoomName()])
-	    if (_.isString(result))
-	    {
-	        this._SpawningCreepName = result
-            console.log("SPAWING NEW CREEP")
-	    }
-	    else
-	    {
-	        console.log("COULD NOT SPAWN CREEP [" + result + "]")    
-	    }
+        this._ConstructionSiteId = constructionSiteGenerator.GetConstructionSite(room, STRUCTURE_CONTAINER)
 	}
 }
 

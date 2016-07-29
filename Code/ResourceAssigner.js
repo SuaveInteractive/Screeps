@@ -126,6 +126,9 @@ ResourceAssigner.UpdateCreeps = function(room)
 
 ResourceAssigner.GetClosestResourceSites = function(room, position)
 {
+    if (this._Debugging)
+        console.log(" ResourceAssigner.GetClosestResourceSites, room [" + room + "], position [" + position + "]")
+        
     var sortedSources = []
     
     for (var id in Memory.ResourceSites[room].Sites)
