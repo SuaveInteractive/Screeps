@@ -6,8 +6,6 @@ var buildContainer = require('Utility.BuildContainer')
 
 var constructionSiteGenerator = require('ConstructionSiteGenerator')
 
-var workTracker = require('WorkTracker')
-
 // ##### Object ######
 function BuildContainer(room)
 {
@@ -62,10 +60,10 @@ BuildContainer.prototype.DeserializedData = function(data)
     this._WorkId = data.WorkId
 }
 
-BuildContainer.prototype.Run = function(state)
+BuildContainer.prototype.Run = function(workTracker)
 {
 	if (this._Debugging)
-		console.log("Plan.BuildContainer -> run")
+		console.log("Plan.BuildContainer -> run [" + workTracker + "]")
 
     var room = Game.rooms[this.GetPlanRoomName()]
 	

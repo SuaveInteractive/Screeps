@@ -1,8 +1,9 @@
-
 if (!Memory.HiveMind)
 {
     Memory.HiveMind = {}
     Memory.HiveMind.CurrentPlans = []
+    
+    Memory.HiveMind.TrackedWork = {}
 }
 
 var calculateNeeds = require('AI.CalculateNeeds');
@@ -15,9 +16,9 @@ var AIPlans = require('Plans');
 
 var worldState = require('WorldState');
 
+var WorkTracker = require('WorkTracker')
 var resouceAssigner = require('ResourceAssigner')
 
-    
 module.exports = {
     _Debugging: true,
     _Player: "Manix",
@@ -25,6 +26,9 @@ module.exports = {
     Run: function ()
     {
         console.log("\nHiveAgent - Run");
+        
+        var wt = new WorkTracker()
+        wt.DeserializedData(Memory.HiveMind.TrackedWork)
         
         var ws = new worldState.WorldState()
         ws.CalculateColonyState(this._Player)
@@ -53,10 +57,12 @@ module.exports = {
             currentPlans = currentPlans.concat(selectPlans.Select(room, newPlans))
             
             // Execute the current plans
-            executePlans.Execute(currentPlans)
-            
+            executePlans.Execute(currentPlans, wt)
+
             this._SerialiseCurrentPlans(currentPlans)
         }
+        
+        Memory.HiveMind.TrackedWork = wt.SerializedData(Memory.HiveMind.TrackedWork)
     },
     
     _SerialiseCurrentPlans: function(currentPlans)

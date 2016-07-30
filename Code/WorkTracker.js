@@ -1,25 +1,27 @@
 var BuildStructure = require("Work.BuildStructure")
 var HarvestSource = require("Work.HarvestSource")
 
-var WorkTracker = {}
-WorkTracker._Debugging = true
-
-if (!Memory.Work)
+function WorkTracker()
 {
-    Memory.Work = {}
-    Memory.Work.CurrentWorkId = 0
+    this._Debugging = true
+    
+    if (this._Debugging)
+        console.log(" WorkTracker.Contructor")
+        
+    this._Work = {}
+    this._CurrentWorkId = 0
 }
 
-WorkTracker.CreateWorkTask = function(room, workType, data)
+WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
 {
     if (this._Debugging)
         console.log(" WorkTracker.CreateWorkTask: room [" + room + "] workType [" + workType + "] data [" + data + "]")
         
-    if (!Memory.Work[room])
-        Memory.Work[room] = []
+    if (!this._Work[room])
+        this._Work[room] = []
         
     var newWork = null
-    var newWorkId = null
+    var newWorkId = null 
     if (workType == 'BUILD_STRUCTURE')
         newWork = new BuildStructure(room, data)
     else if (workType == 'HARVEST_SOURCE')
@@ -27,25 +29,84 @@ WorkTracker.CreateWorkTask = function(room, workType, data)
     
     if (newWork)
     {
-        newWorkId = Memory.Work.CurrentWorkId
+        newWorkId = this._CurrentWorkId
         newWork.SetWorkId(newWorkId)
-        Memory.Work.CurrentWorkId++
+        this._CurrentWorkId = this._CurrentWorkId + 1
     }
     
-    Memory.Work[room].push(newWork)
+    this._Work[room].push(newWork)
     
     return newWorkId
 }
 
-WorkTracker.GetWorkForId = function(room, id)
+WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepName)
 {
-    if (!Memory.Work[room])
+    if (this._Debugging)
+        console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workId [" + workId + "] creepName [" + creepName + "]")
+        
+    if (!this._Work[room])
         return
     
-    for (var i in Memory.Work[room])
+    for (var i in this._Work[room])
     {
-        console.log("GetWorkForId: " + Memory.Work[room][i])
+        var work = this._Work[room][i]
+        console.log("GetWorkForId: " + work._Id)
+        
+        if (work._Id == workId)
+        {
+            work.AssignCreep(creepName)
+        }
     }
 }
+
+WorkTracker.prototype.SerializedData = function()
+{
+    if (this._Debugging)
+        console.log(" WorkTracker.SerializedData: _CurrentWorkId [" + this._CurrentWorkId + "]")
+        
+    var data = {}
+    data.Work = {}
+    
+    data.CurrentWorkId = this._CurrentWorkId
+    
+    for (var room in this._Work)
+    {
+        console.log("  room: " + room)
+        console.log("  room.name: " + room.name)
+        console.log("  this._Work[room]: " + this._Work[room])
+        console.log("  this._Work[room].Work: " + this._Work[room].Work)
+        
+        var workInRoom = this._Work[room]
+        for (var roomWork in workInRoom)
+        {
+            console.log("   roomWork: " + roomWork)
+            console.log("   workInRoom: " + workInRoom)
+            console.log("   workInRoom[roomWork]: " + workInRoom[roomWork])
+            console.log("   workInRoom[roomWork].GetWorkId(): " + workInRoom[roomWork].GetWorkId())
+            console.log("   workInRoom[roomWork].SerializedData(): " + workInRoom[roomWork].SerializedData())
+
+            data.Work[room] = []
+            data.Work[room].push(workInRoom[roomWork].SerializedData())
+        }
+    }
+    
+    return data
+}
+
+WorkTracker.prototype.DeserializedData = function(data)
+{
+    if (this._Debugging)
+        console.log(" WorkTracker.DeserializedData")
+        
+    if (data.CurrentWorkId != null)
+        this._CurrentWorkId = data.CurrentWorkId
+    
+    for (var room in data.Work)
+    {
+        console.log(" room: " + data.Work[room])
+        this._Work[room] = data.Work[room]
+    }
+}
+
 
 module.exports = WorkTracker;

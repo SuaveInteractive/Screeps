@@ -9,7 +9,7 @@ function HarvestSource(room, data)
     if (this._Debugging)
         console.log("HarvestSource constructor")
         
-    Work.call(this)
+    Work.call(this, "HarvestSource")
 }
 
 HarvestSource.prototype = Object.create(Work.prototype)

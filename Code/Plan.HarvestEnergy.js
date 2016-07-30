@@ -6,14 +6,12 @@ var worldState = require('WorldState');
 var energyIncome = require('Utility.EnergyIncome');
 var resourceAssigner = require('ResourceAssigner');
 
-var workTracker = require('WorkTracker')
-
 // ##### Object ######
 function HarvestEnergy(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = false
+    this._Debugging = true
     this._NumberOfLaborersSpawned = 0
     this._NumberOfLaborersToSpawn = 1
 }
@@ -68,7 +66,7 @@ HarvestEnergy.prototype.DeserializedData = function(data)
     this._SpawningCreepName = data.SpawningCreepName
 }
 
-HarvestEnergy.prototype.Run = function(state)
+HarvestEnergy.prototype.Run = function(wt)
 {
 	if (this._Debugging)
 		console.log("Plan.HarvestEnergy -> run")
@@ -89,7 +87,7 @@ HarvestEnergy.prototype.Run = function(state)
 
             var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
         
-            this._WorkId = workTracker.CreateWorkTask(room, 'HARVEST_SOURCE', {MiningSite: miningSiteId})
+            this._WorkId = wt.CreateWorkTask(room, 'HARVEST_SOURCE', {MiningSite: miningSiteId})
         }
     }
     
@@ -103,8 +101,10 @@ HarvestEnergy.prototype.Run = function(state)
         else
         {
             if (this._Debugging)
-                console.log("SPAWIED")
-                
+                console.log("SPAWNED")
+            
+            workTracker.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
+            
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    
         }

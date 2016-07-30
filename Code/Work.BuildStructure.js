@@ -9,7 +9,7 @@ function BuildStructure(room, data)
     if (this._Debugging)
         console.log("BuildStructure constructor")
         
-    Work.call(this)
+    Work.call(this, "BuildStructure")
     
     this._ConstructionSiteId = data.SiteId
 }
