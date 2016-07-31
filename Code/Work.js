@@ -39,11 +39,19 @@ Work.prototype.SetFinished = function(finished)
 
 Work.prototype.AssignCreep = function(creepName)
 {
+    console.log("Work.prototype.AssignCreep: creepName [" + creepName + "]") 
     this._AssignedCreeps.push(creepName)
+}
+
+Work.prototype.GetAssignCreeps = function()
+{
+    return this._AssignedCreeps
 }
 
 Work.prototype.SerializedData = function()
 {
+    console.log("Work.prototype.SerializedData: this._AssignedCreeps [" + this._AssignedCreeps + "]") 
+    
     var data = {}
     
     data.Type = this._Type
@@ -56,6 +64,8 @@ Work.prototype.SerializedData = function()
 
 Work.prototype.DeserializedData = function(data)
 {
+    console.log("Work.prototype.DeserializedData: data.AssignedCreeps [" + data.AssignedCreeps + "]") 
+    
     this._Type = data.Type
     this._Id = data.Id
     this._Finished = data.Finished

@@ -75,7 +75,7 @@ BuildContainer.prototype.Run = function(workTracker)
 	}
 	else if (this._ConstructionSiteId)
 	{
-	    this._WorkId = workTracker.CreateWorkTask(room, 'BUILD_STRUCTURE', {SiteId: this._ConstructionSiteId})
+	    this._WorkId = workTracker.CreateWorkTask(room, 'BuildStructure', {SiteId: this._ConstructionSiteId})
 	}
 	else if (!this._ConstructionSiteId)
 	{

@@ -87,7 +87,7 @@ HarvestEnergy.prototype.Run = function(wt)
 
             var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
         
-            this._WorkId = wt.CreateWorkTask(room, 'HARVEST_SOURCE', {MiningSite: miningSiteId})
+            this._WorkId = wt.CreateWorkTask(room, 'HarvestSource', {MiningSite: miningSiteId})
         }
     }
     
@@ -103,7 +103,7 @@ HarvestEnergy.prototype.Run = function(wt)
             if (this._Debugging)
                 console.log("SPAWNED")
             
-            workTracker.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
+            wt.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
             
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    

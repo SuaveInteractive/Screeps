@@ -2,7 +2,7 @@
 var Work = require('Work');
 
 // ##### Object ######
-function BuildStructure(room, data)
+function BuildStructure(room)
 {
     this._Debugging = true
     
@@ -10,8 +10,6 @@ function BuildStructure(room, data)
         console.log("BuildStructure constructor")
         
     Work.call(this, "BuildStructure")
-    
-    this._ConstructionSiteId = data.SiteId
 }
 
 BuildStructure.prototype = Object.create(Work.prototype)

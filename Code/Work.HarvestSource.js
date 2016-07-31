@@ -2,7 +2,7 @@
 var Work = require('Work');
 
 // ##### Object ######
-function HarvestSource(room, data)
+function HarvestSource(room)
 {
     this._Debugging = true
     
@@ -18,6 +18,11 @@ HarvestSource.prototype.Run = function(state)
 {
 	if (this._Debugging)
 		console.log("HarvestSource -> run")
+		
+    for (var i in this.GetAssignCreeps())
+    {
+        console.log(" ---")
+    }
 }
 
 HarvestSource.prototype.SerializedData = function()

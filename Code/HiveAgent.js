@@ -36,7 +36,9 @@ module.exports = {
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName]
-            
+        
+            wt.Run(room)
+        
             resouceAssigner.UpdateCreeps(room)
             
             var currentPlans = this._DeserialiseCurrentPlans(room)
