@@ -31,24 +31,12 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             
             this.TotalEnergyAvailable += room.energyAvailable
             
-            var availableStructures = {}
-            
-            for (var i in CONTROLLER_STRUCTURES)
-            {
-                var availableArray = CONTROLLER_STRUCTURES[i]
-                var alreadyPlace = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, {
-                    filter: { structureType: i }
-                });
-                availableStructures[i] = availableArray[room.controller.level] - alreadyPlace.length
-            }
-            
             this.Rooms[room] = 
             {
                 RoomControllerLevel: room.controller.level,
                 EnergyAvailable: room.energyAvailable,
                 NumberMyCreeps: room.find(FIND_MY_CREEPS).length,
-                NumberEnemiesCreeps: room.find(FIND_HOSTILE_CREEPS).length,
-                AvailableStructures: availableStructures,
+                NumberEnemiesCreeps: room.find(FIND_HOSTILE_CREEPS).length
             }
         }
     }
@@ -61,11 +49,6 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             this.NumberOfCreepsSpawing += 1
         else
             this.NumberOfCreeps += 1
-            
-        if (creep.memory.role == 'harvester')
-            this.CreepInRoles.CREEP_HARVESTERS += 1
-        else if (creep.memory.role == 'builder')
-            this.CreepInRoles.CREEP_BUILDERS += 1
     }
 }
 
