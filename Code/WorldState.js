@@ -16,7 +16,7 @@ function WorldState()
     this.CreepInRoles.CREEP_HARVESTERS = 0
 }
 
-WorldState.prototype.CalculateColonyState = function(playerName)
+WorldState.prototype.CalculateColonyState = function(playerName, workTracker)
 {
     // World
     this.TotalEnergyAvailable = 0
@@ -61,11 +61,27 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             this.NumberOfCreepsSpawing += 1
         else
             this.NumberOfCreeps += 1
+    }
+    
+    console.log(" workTracker: " + workTracker)
+    
+    for (var workRoom in workTracker._Work)
+    {
+        console.log(" workRoom: " + workRoom) 
+    
+        for (var i in workTracker._Work[workRoom])
+        {
+            var work = workTracker._Work[workRoom][i]
+            console.log("  work: " + work)     
             
-        if (creep.memory.role == 'harvester')
-            this.CreepInRoles.CREEP_HARVESTERS += 1
-        else if (creep.memory.role == 'builder')
-            this.CreepInRoles.CREEP_BUILDERS += 1
+            var assignedCreeps = work.GetAssignCreeps()
+            
+            var workType = work.GetWorkType() 
+            if (workType == "HarvestSource")
+                this.CreepInRoles.CREEP_HARVESTERS += assignedCreeps.length
+            else if (workType == "BuildStructure")
+                this.CreepInRoles.CREEP_BUILDERS += assignedCreeps.length
+        }
     }
 }
 

@@ -6,7 +6,7 @@ var worldState = require('WorldState');
 module.exports = {
 	_Debugging: false,
 	
-    Calculate: function (room, world, plans)
+    Calculate: function (room, world, plans, workTracker)
     {
 		if (this._Debugging)
 			console.log("AI.CalculateNeeds -> Calculate")
@@ -30,7 +30,7 @@ module.exports = {
         
         // TEMP - What the world state will look like after all the plans run
         var ws = new worldState.WorldState()
-        ws.CalculateColonyState("Manix")
+        ws.CalculateColonyState("Manix", workTracker)
         
     	for (var i in plans)
 		{

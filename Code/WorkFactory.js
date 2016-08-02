@@ -2,7 +2,7 @@ var BuildStructure = require("Work.BuildStructure")
 var HarvestSource = require("Work.HarvestSource")
 
 module.exports = {
-    _Debugging: true,
+    _Debugging: false,
     
     GetWork: function(workType, room, data)
     {

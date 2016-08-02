@@ -11,7 +11,7 @@ function BuildContainer(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = true
+    this._Debugging = false
 }
 
 BuildContainer.prototype = Object.create(Plan.Plan.prototype)

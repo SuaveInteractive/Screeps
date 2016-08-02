@@ -20,7 +20,7 @@ var WorkTracker = require('WorkTracker')
 var resouceAssigner = require('ResourceAssigner')
 
 module.exports = {
-    _Debugging: true,
+    _Debugging: false,
     _Player: "Manix",
 	 
     Run: function ()
@@ -31,7 +31,7 @@ module.exports = {
         wt.DeserializedData(Memory.HiveMind.TrackedWork)
         
         var ws = new worldState.WorldState()
-        ws.CalculateColonyState(this._Player)
+        ws.CalculateColonyState(this._Player, wt)
         
         for (var roomName in Game.rooms)
         {
@@ -47,7 +47,7 @@ module.exports = {
             currentPlans = evalPlans.Evaluate(currentPlans)
             
             // Calaculate the needs of the Colony based on the current plans
-            var needs = calculateNeeds.Calculate(room, ws, currentPlans)
+            var needs = calculateNeeds.Calculate(room, ws, currentPlans, wt)
             
             // Create new plans based on needs
             var newPlans = createPlans.Create(room, needs)

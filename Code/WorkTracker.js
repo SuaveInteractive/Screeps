@@ -2,7 +2,7 @@ var WorkFactory = require("WorkFactory")
 
 function WorkTracker()
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log(" WorkTracker.Contructor")
@@ -64,9 +64,33 @@ WorkTracker.prototype.Run = function(room)
     {
         var work = this._Work[room][i]       
         
-        console.log("work: " + work)
+        if (this._Debugging)    
+            console.log(" Work: " + work)
+        
+        this.CleanUpWork(work)
         
         work.Run()
+    }
+}
+
+WorkTracker.prototype.CleanUpWork = function(work)
+{
+    if (this._Debugging)
+        console.log(" WorkTracker.CleanUpWork")
+        
+    var assignedCreeps = work.GetAssignCreeps()
+    
+    for (var i in assignedCreeps)
+    {
+        var creep = assignedCreeps[i]
+        if (Game.creeps[creep] == null)
+        {
+            if (this._Debugging)
+                console.log(" WorkTracker.CleanUpWork - removing creep [" + creep + "] from [" + work + "]")
+        
+            var index = assignedCreeps.indexOf(creep)
+		    assignedCreeps.splice(index, 1)
+        }
     }
 }
 
@@ -110,10 +134,6 @@ WorkTracker.prototype.DeserializedData = function(data)
         for (var i in data.Work[room])
         {
             var workData = data.Work[room][i]
-            
-            console.log("  workData: " + workData)
-            console.log("  workData.Type: " + workData.Type)
-            
             var newWork = WorkFactory.GetWork(workData.Type, room, workData)
             newWork.DeserializedData(workData)
             

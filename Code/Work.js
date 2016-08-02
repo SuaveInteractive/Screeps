@@ -1,7 +1,7 @@
 // ##### Object ######
 function Work(type)
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("Work Constructor")
@@ -39,7 +39,9 @@ Work.prototype.SetFinished = function(finished)
 
 Work.prototype.AssignCreep = function(creepName)
 {
-    console.log("Work.prototype.AssignCreep: creepName [" + creepName + "]") 
+    if (this._Debugging)
+        console.log(" Work.prototype.AssignCreep: creepName [" + creepName + "]") 
+        
     this._AssignedCreeps.push(creepName)
 }
 
@@ -50,7 +52,8 @@ Work.prototype.GetAssignCreeps = function()
 
 Work.prototype.SerializedData = function()
 {
-    console.log("Work.prototype.SerializedData: this._AssignedCreeps [" + this._AssignedCreeps + "]") 
+    if (this._Debugging)
+        console.log(" Work.prototype.SerializedData: this._AssignedCreeps [" + this._AssignedCreeps + "]") 
     
     var data = {}
     
@@ -64,7 +67,8 @@ Work.prototype.SerializedData = function()
 
 Work.prototype.DeserializedData = function(data)
 {
-    console.log("Work.prototype.DeserializedData: data.AssignedCreeps [" + data.AssignedCreeps + "]") 
+    if (this._Debugging)
+        console.log(" Work.prototype.DeserializedData: data.AssignedCreeps [" + data.AssignedCreeps + "]") 
     
     this._Type = data.Type
     this._Id = data.Id
@@ -74,7 +78,7 @@ Work.prototype.DeserializedData = function(data)
 
 Work.prototype.toString = function()
 {
-    return "Work: Id [" + this._Id + "] Finished [" + this._Finished + "] AssignedCreeps [" + this._AssignedCreeps + "]"
+    return "Work: Id [" + this._Id + "] Type [" + this._Type + "] Finished [" + this._Finished + "] AssignedCreeps [" + this._AssignedCreeps + "]"
 }
 
 // ##### Exports ######

@@ -1,10 +1,10 @@
 var roleHarvester = {}
 
-roleHarvester.run = function(creep) 
+roleHarvester.Run = function(creep, data) 
 {
     if(creep.carry.energy < creep.carryCapacity && creep.memory.transfering != true) 
     {
-        var harvestTarget = Game.getObjectById(creep.memory.harvestTargetId)
+        var harvestTarget = Game.getObjectById(data.HarvestSite)
         var result = creep.harvest(harvestTarget)
         if(result == ERR_NOT_IN_RANGE) 
         {
