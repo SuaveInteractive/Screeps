@@ -1,5 +1,7 @@
 // ##### Object ######
-function Work(type)
+var CurrentWorkId = 0;
+
+function Work(type, data)
 {
     this._Debugging = false
     
@@ -7,9 +9,18 @@ function Work(type)
         console.log("Work Constructor")
     
     this._Type = type
-    this._Id = -1
+    
+    var workId = data.Id
+    if (workId == null)
+    {
+        workId = CurrentWorkId
+        CurrentWorkId++
+    }
+    
+    this._Id = workId
     this._Finished = false 
     this._AssignedCreeps = []
+    this._Parent = data.Parent
 }
 
 Work.prototype.GetWorkType = function()
@@ -25,6 +36,11 @@ Work.prototype.GetWorkId = function()
 Work.prototype.SetWorkId = function(id)
 {
     this._Id = id
+}
+
+Work.prototype.GetParent = function()
+{
+    return this._Parent
 }
 
 Work.prototype.GetFinished = function()
@@ -45,6 +61,17 @@ Work.prototype.AssignCreep = function(creepName)
     this._AssignedCreeps.push(creepName)
 }
 
+Work.prototype.UnassignCreep = function(creepName)
+{
+    if (this._Debugging)
+        console.log(" Work.prototype.AssignCreep: creepName [" + creepName + "]") 
+        
+    var index = this._AssignedCreeps.indexOf(creepName)
+
+    if (index > -1)
+        this._AssignedCreeps.splice(index, 1)
+}
+
 Work.prototype.GetAssignCreeps = function()
 {
     return this._AssignedCreeps
@@ -61,6 +88,7 @@ Work.prototype.SerializedData = function()
     data.Id = this._Id
     data.Finished = this._Finished
     data.AssignedCreeps = this._AssignedCreeps
+    data.Parent = this._Parent
     
     return data
 }
@@ -74,6 +102,7 @@ Work.prototype.DeserializedData = function(data)
     this._Id = data.Id
     this._Finished = data.Finished
     this._AssignedCreeps = data.AssignedCreeps
+    this._Parent = data.Parent
 }
 
 Work.prototype.toString = function()

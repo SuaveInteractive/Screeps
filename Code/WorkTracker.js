@@ -1,3 +1,4 @@
+var Work = require("Work")
 var WorkFactory = require("WorkFactory")
 
 function WorkTracker()
@@ -19,19 +20,20 @@ WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
     if (!this._Work[room])
         this._Work[room] = []
         
-    var newWork = WorkFactory.GetWork(workType, room, data)
-    var newWorkId = null 
-    
-    if (newWork)
-    {
-        newWorkId = this._CurrentWorkId
-        newWork.SetWorkId(newWorkId)
-        this._CurrentWorkId = this._CurrentWorkId + 1
-    }
+    var newWork = WorkFactory.GetWork(workType, room, data, this)
+    WorkFactory._CurrentWorkId++
     
     this._Work[room].push(newWork)
     
-    return newWorkId
+    return newWork.GetWorkId()
+}
+
+WorkTracker.prototype.GetWorkTask = function(room, workId)
+{
+    if (this._Debugging)
+        console.log(" WorkTracker.GetWorkTask: room [" + room + "] workId [" + workId + "]")  
+        
+    // TODO
 }
 
 WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepName)
@@ -67,9 +69,9 @@ WorkTracker.prototype.Run = function(room)
         if (this._Debugging)    
             console.log(" Work: " + work)
         
-        this.CleanUpWork(work)
+        this.CleanUpWork(work, this)
         
-        work.Run()
+        work.Run(room, this)
     }
 }
 
@@ -102,7 +104,7 @@ WorkTracker.prototype.SerializedData = function()
     var data = {}
     data.Work = {}
     
-    data.CurrentWorkId = this._CurrentWorkId
+    data.CurrentWorkId = Work._CurrentWorkId
     
     for (var room in this._Work)
     {
@@ -124,7 +126,7 @@ WorkTracker.prototype.DeserializedData = function(data)
         console.log(" WorkTracker.DeserializedData")
         
     if (data.CurrentWorkId != null)
-        this._CurrentWorkId = data.CurrentWorkId
+        Work._CurrentWorkId = data.CurrentWorkId
     
     for (var room in data.Work)
     {

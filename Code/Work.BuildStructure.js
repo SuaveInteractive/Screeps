@@ -2,14 +2,14 @@
 var Work = require('Work');
 
 // ##### Object ######
-function BuildStructure(room)
+function BuildStructure(room, data, workTracker)
 {
     this._Debugging = false
     
     if (this._Debugging)
         console.log("BuildStructure constructor")
         
-    Work.call(this, "BuildStructure")
+    Work.call(this, "BuildStructure", data)
 }
 
 BuildStructure.prototype = Object.create(Work.prototype)

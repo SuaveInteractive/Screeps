@@ -1,7 +1,7 @@
-var roleHarvester = {}
+var RoleTransferResource = {}
 
-roleHarvester.Run = function(creep, data) 
-{
+RoleTransferResource.Run = function(creep, data) 
+{/*
     //if(creep.carry.energy < creep.carryCapacity && creep.memory.transfering != true) 
     if (this.CanHarvest(creep))
     {
@@ -15,15 +15,9 @@ roleHarvester.Run = function(creep, data)
                 creep.say("Cant Move")
         }
     }
-    else
+    else */
     {
-        return false
-    }
-    return true
-    
-  /*  else 
-    {
-        creep.memory.transfering = true
+    //    creep.memory.transfering = true
         
         var targets = creep.room.find(FIND_STRUCTURES, 
         {
@@ -50,14 +44,9 @@ roleHarvester.Run = function(creep, data)
             }
         }
         
-        if (creep.carry.energy == 0)
-            creep.memory.transfering = null
-    }*/
+      //  if (creep.carry.energy == 0)
+      //      creep.memory.transfering = null
+    }
 }
 
-roleHarvester.CanHarvest = function(creep)
-{
-    return creep.carry.energy < creep.carryCapacity && creep.memory.transfering != true
-}
-
-module.exports = roleHarvester;
+module.exports = RoleTransferResource;

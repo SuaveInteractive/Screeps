@@ -2,54 +2,51 @@
 var recruiter = require('Recruiter');
 var Plan = require('Plan');
 
-var worldState = require('WorldState');
-var energyIncome = require('Utility.EnergyIncome');
 var resourceAssigner = require('ResourceAssigner');
+var UtilitySpawnLabourer = require('Utility.SpawnLabourer');
 
 // ##### Object ######
-function HarvestEnergy(room)
+function SpawnLabourers(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = false
+    this._Debugging = true
     
     this._NumberOfLaborersSpawned = 0
-    this._NumberOfLaborersToSpawn = 1
+    this._NumberOfLaborersToSpawn = 3
 }
 
-HarvestEnergy.prototype = Object.create(Plan.Plan.prototype)
+SpawnLabourers.prototype = Object.create(Plan.Plan.prototype)
 
-HarvestEnergy.prototype.GetUtilitiesServed = function()
+SpawnLabourers.prototype.GetUtilitiesServed = function()
 {
-    var utilityServed = ['ENERGY_INCOME']
+    var utilityServed = ['SPAWN_LABOURER']
     return utilityServed
 }
 
-HarvestEnergy.prototype.GetId = function()
+SpawnLabourers.prototype.GetId = function()
 {
-    return 'HARVEST_ENERGY'
+    return 'SPAWN_LABOURERS'
 }
 
-HarvestEnergy.prototype.GetFinisedResult = function(room, worldState)
+SpawnLabourers.prototype.GetFinisedResult = function(room, worldState)
 {
     var result = []
     
-    this._NumberOfLaborersToSpawn = 1
+    var util = new UtilitySpawnLabourer()
     
-    var util = new energyIncome.UtilityEnergyIncoming()
-    
-    worldState.CreepInRoles.CREEP_HARVESTERS += this._NumberOfLaborersToSpawn
+    worldState.NumberOfCreeps += this._NumberOfLaborersToSpawn
     
     result.push(util.Calculate(room, worldState))
     
     return result
 }
 
-HarvestEnergy.prototype.SerializedData = function()
+SpawnLabourers.prototype.SerializedData = function()
 {
     var data = Plan.Plan.prototype.SerializedData.call(this)
     
-    data.WorkId = this._WorkId
+    data.RefillSpawnWorkId = this._RefillSpawnWorkId
     data.NumberOfLaborersSpawned = this._NumberOfLaborersSpawned
     data.NumberOfLaborersToSpawn = this._NumberOfLaborersToSpawn
     data.SpawningCreepName = this._SpawningCreepName
@@ -57,28 +54,24 @@ HarvestEnergy.prototype.SerializedData = function()
     return data
 }
 
-HarvestEnergy.prototype.DeserializedData = function(data)
+SpawnLabourers.prototype.DeserializedData = function(data)
 {
     Plan.Plan.prototype.DeserializedData.call(this, data)
     
-    this._WorkId = data.WorkId
+    this._RefillSpawnWorkId = data.RefillSpawnWorkId
     this._NumberOfLaborersSpawned = data.NumberOfLaborersSpawned
     this._NumberOfLaborersToSpawn = data.NumberOfLaborersToSpawn
     this._SpawningCreepName = data.SpawningCreepName
 }
 
-HarvestEnergy.prototype.Run = function(wt)
+SpawnLabourers.prototype.Run = function(workTracker)
 {
 	if (this._Debugging)
-		console.log("Plan.HarvestEnergy -> run")
-	
-	var creepHarvester = null
-	if (this._SpawningCreepName)
-	    creepHarvester = Game.creeps[this._SpawningCreepName]
-    
+		console.log("SpawnLabourers -> run [" + workTracker + "]")
+
     var room = Game.rooms[this.GetPlanRoomName()]
     
-    if (this._WorkId == null)
+    if (this._RefillSpawnWorkId == null)
     {
         var spawns = Memory.ParsedRooms[room].Spawns
         
@@ -88,23 +81,27 @@ HarvestEnergy.prototype.Run = function(wt)
 
             var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
         
-            this._WorkId = wt.CreateWorkTask(room, 'HarvestSource', {HarvestSite: miningSiteId})
+            this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteId: miningSiteId, SpawnId: spawns[spawn].id})
         }
     }
+    
+	var creepHarvester = null
+	if (this._SpawningCreepName)
+	    creepHarvester = Game.creeps[this._SpawningCreepName]
     
     if (creepHarvester != null)
     {
         if (creepHarvester.spawning)
         {
             if (this._Debugging)
-                console.log(" HarvestEnergy.prototype.Run SPAWING CREEP")
+                console.log(" SpawnLabourers.prototype.Run SPAWING CREEP")
         }
         else
         {
             if (this._Debugging)
-                console.log(" HarvestEnergy.prototype.Run SPAWNED")
+                console.log(" SpawnLabourers.prototype.Run SPAWNED")
             
-            wt.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
+            workTracker.AssignCreepToWorkId(room, this._RefillSpawnWorkId, this._SpawningCreepName)
             
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    
@@ -119,7 +116,7 @@ HarvestEnergy.prototype.Run = function(wt)
 	        this._SpawningCreepName = result
 	        
 	        if (this._Debugging)
-                console.log(" HarvestEnergy.prototype.Run NEW CREEP")
+                console.log(" SpawnLabourers.prototype.Run NEW CREEP")
 	    }
 	    else
 	    {
@@ -129,18 +126,16 @@ HarvestEnergy.prototype.Run = function(wt)
     else
     {
         if (this._Debugging)
-            console.log(" HarvestEnergy.prototype.Run PLAN FINISHED")
+            console.log(" SpawnLabourers.prototype.Run PLAN FINISHED")
             
         this.SetFinished(true)
     }
 }
 
-HarvestEnergy.prototype.toString = function()
+SpawnLabourers.prototype.toString = function()
 {
-    return "HarvestEnergy"
+    return "SpawnLabourers"
 }
 
 // ##### Exports ######
-module.exports = {
-	HarvestEnergy: HarvestEnergy,
-};
+module.exports = SpawnLabourers;

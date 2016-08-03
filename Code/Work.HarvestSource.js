@@ -4,21 +4,21 @@ var Work = require('Work')
 var RoleHarvester = require('CreepRole.Harvester')
 
 // ##### Object ######
-function HarvestSource(room, data)
+function HarvestSource(room, data, workTracker)
 {
     this._Debugging = false
     
     if (this._Debugging)
         console.log("HarvestSource constructor")
         
-    Work.call(this, "HarvestSource")
+    Work.call(this, "HarvestSource", data)
     
     this._HarvestSite = data.HarvestSite
 }
 
 HarvestSource.prototype = Object.create(Work.prototype)
 
-HarvestSource.prototype.Run = function()
+HarvestSource.prototype.Run = function(room, workTracker)
 {
 	if (this._Debugging)
 		console.log("HarvestSource -> run")
@@ -27,7 +27,11 @@ HarvestSource.prototype.Run = function()
     for (var i in assignedCreeps)
     {
         var creep = Game.creeps[assignedCreeps[i]]
-        RoleHarvester.Run(creep, {HarvestSite: this._HarvestSite})
+        if (!RoleHarvester.Run(creep, {HarvestSite: this._HarvestSite}))
+        {
+            workTracker.AssignCreepToWorkId(room, this.GetParent(), assignedCreeps[i])
+            this.UnassignCreep(assignedCreeps[i])
+        }
     }
 }
 

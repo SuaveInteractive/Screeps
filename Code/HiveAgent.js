@@ -101,6 +101,8 @@ module.exports = {
         
         Memory.HiveMind.CurrentPlans.forEach(function(item)
         {
+            console.log("item.PlanId: " + item.PlanId)
+            
             var plan = new AIPlans.AIPlans[item.PlanId](room)
             
             plan.DeserializedData(item.Data)

@@ -4,7 +4,7 @@ var Utilities = require('Utilities');
 var worldState = require('WorldState');
 
 module.exports = {
-	_Debugging: false,
+	_Debugging: true,
 	
     Calculate: function (room, world, plans, workTracker)
     {

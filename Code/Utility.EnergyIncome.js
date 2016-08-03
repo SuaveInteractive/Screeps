@@ -9,10 +9,11 @@ UtilityEnergyIncoming.prototype.Calculate = function(room, worldState)
     var roomLevel = worldState.Rooms[room].RoomControllerLevel
     var energyAvailable = worldState.Rooms[room].EnergyAvailable
     var numberOfHarvesters = worldState.CreepInRoles.CREEP_HARVESTERS
+    var numberOfCreeps = worldState.Rooms[room].NumberOfCreeps
     
     var result = 0.00
     
-    if (energyAvailable > 0)
+    if (numberOfCreeps >= 3 && energyAvailable > 0)
     {
         result = 1.00 - (numberOfHarvesters / 3.00)
         
