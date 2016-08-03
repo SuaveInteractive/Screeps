@@ -3,7 +3,7 @@ var AIPlans = require('Plans');
 module.exports = {
 	_Debugging: true,
 	
-    Create: function (room, needs)
+    Create: function (needs)
     {
 		if (this._Debugging)
 			console.log("AI.CreatePlans -> Create")
@@ -16,9 +16,9 @@ module.exports = {
 		    if (this._Debugging)
 			    console.log("  need: " + need + ", needValue: " + needValue)
 
-		    if (needValue > 0.0001)
+		    if (needValue > 0)
 		    {
-		        var newPlans = this._GetPlansForUtility(room, need)
+		        var newPlans = this._GetPlansForUtility(need)
 		        plans = plans.concat(newPlans)
 		    }
 		}
@@ -35,14 +35,14 @@ module.exports = {
 		return plans
     },
     
-    _GetPlansForUtility: function(room, neededUtil)
+    _GetPlansForUtility: function(neededUtil)
     {
         var plans = []
 
     	for (var key in AIPlans.AIPlans)
 		{
-		    var plan = new AIPlans.AIPlans[key](room)
-		    
+		    var plan = new AIPlans.AIPlans[key]
+
 		    var utilitiesServed = plan.GetUtilitiesServed()
 		    
 		    _.forEach(utilitiesServed, function(util) 

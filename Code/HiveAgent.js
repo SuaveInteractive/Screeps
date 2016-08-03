@@ -1,9 +1,8 @@
+
 if (!Memory.HiveMind)
 {
     Memory.HiveMind = {}
     Memory.HiveMind.CurrentPlans = []
-    
-    Memory.HiveMind.TrackedWork = {}
 }
 
 var calculateNeeds = require('AI.CalculateNeeds');
@@ -15,42 +14,32 @@ var selectPlans = require('AI.SelectPlans');
 var AIPlans = require('Plans');
 
 var worldState = require('WorldState');
-
-var WorkTracker = require('WorkTracker')
-var resouceAssigner = require('ResourceAssigner')
-
+    
 module.exports = {
-    _Debugging: false,
+    _Debugging: true,
     _Player: "Manix",
 	 
     Run: function ()
     {
-        console.log("\nHiveAgent - Run");
-        
-        var wt = new WorkTracker()
-        wt.DeserializedData(Memory.HiveMind.TrackedWork)
+        console.log("HiveAgent - Run");
         
         var ws = new worldState.WorldState()
-        ws.CalculateColonyState(this._Player, wt)
-        
+        ws.CalculateColonyState(this._Player)
+
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName]
-        
-            wt.Run(room)
-        
-            resouceAssigner.UpdateCreeps(room)
             
-            var currentPlans = this._DeserialiseCurrentPlans(room)
+            var currentPlans = this._DeserialiseCurrentPlans()
             
             // Test to see if any current plans should be removed
             currentPlans = evalPlans.Evaluate(currentPlans)
             
             // Calaculate the needs of the Colony based on the current plans
-            var needs = calculateNeeds.Calculate(room, ws, currentPlans, wt)
+            var needs = calculateNeeds.Calculate(room, ws, currentPlans)
             
             // Create new plans based on needs
-            var newPlans = createPlans.Create(room, needs)
+            var newPlans = createPlans.Create(needs)
             
             // Prioritise the plans based of Hive Mind Personallity
             newPlans = prioritisePlans.Prioritise(newPlans)
@@ -59,12 +48,10 @@ module.exports = {
             currentPlans = currentPlans.concat(selectPlans.Select(room, newPlans))
             
             // Execute the current plans
-            executePlans.Execute(currentPlans, wt)
-
+            executePlans.Execute(currentPlans)
+            
             this._SerialiseCurrentPlans(currentPlans)
         }
-        
-        Memory.HiveMind.TrackedWork = wt.SerializedData(Memory.HiveMind.TrackedWork)
     },
     
     _SerialiseCurrentPlans: function(currentPlans)
@@ -95,15 +82,13 @@ module.exports = {
 
     },
     
-    _DeserialiseCurrentPlans: function(room)
+    _DeserialiseCurrentPlans: function()
     {
         var plans = []
         
         Memory.HiveMind.CurrentPlans.forEach(function(item)
         {
-            console.log("item.PlanId: " + item.PlanId)
-            
-            var plan = new AIPlans.AIPlans[item.PlanId](room)
+            var plan = new AIPlans.AIPlans[item.PlanId]
             
             plan.DeserializedData(item.Data)
             

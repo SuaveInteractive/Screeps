@@ -2,6 +2,7 @@
 var roomHelper = require('RoomHelper');
 var hiveAgent = require('HiveAgent');
 
+var roleHarvester = require('CreepRole.Harvester')
 var roleBuilder = require('CreepRole.Builder');
 
 module.exports = {
@@ -17,6 +18,10 @@ module.exports = {
         for(var name in Game.creeps) 
         {
             var creep = Game.creeps[name];
+            if(creep.memory.role == 'harvester') 
+            {
+                roleHarvester.run(creep);
+            }
             if(creep.memory.role == 'upgrader') 
             {
                 roleUpgrader.run(creep);

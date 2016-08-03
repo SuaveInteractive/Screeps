@@ -32,6 +32,8 @@ module.exports = {
         var ws = new worldState.WorldState()
         ws.CalculateColonyState("Manix", workTracker)
         
+        console.log("START: " + ws)
+    	
     	for (var i in plans)
 		{
 		    var plan = plans[i]
@@ -46,11 +48,13 @@ module.exports = {
 		        for (var k in result)
 		        {
 		            var util = result[k]
-		            needs[util.UtilType] = Math.min((needs[util.UtilType] - util.Value).toFixed(2), 0.0)
+		            needs[util.UtilType] = needs[util.UtilType] - (1.0 - util.Value)
 		        }
 		    }
 		}
 		
+		console.log("END: " + ws)
+
         if (this._Debugging)
         {
             console.log("Utility Needs:")
