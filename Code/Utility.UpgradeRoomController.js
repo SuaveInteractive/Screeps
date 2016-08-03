@@ -1,13 +1,11 @@
 // ##### Object ######
 function UpgradeRoomController()
 {
-    this._Debugging = true
+    this._Debugging = false
 }
 
 UpgradeRoomController.prototype.Calculate = function(world)
 {
-    console.log("world: " + world)
-    
 	return	{
 				UtilType: 'UPGRADE_ROOM_CONTROLLER', 
 				Value: 1.0

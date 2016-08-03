@@ -16,7 +16,7 @@ function WorldState()
     this.CreepInRoles.CREEP_HARVESTERS = 0
 }
 
-WorldState.prototype.CalculateColonyState = function(playerName)
+WorldState.prototype.CalculateColonyState = function(playerName, workTracker)
 {
     // World
     this.TotalEnergyAvailable = 0
@@ -31,12 +31,24 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             
             this.TotalEnergyAvailable += room.energyAvailable
             
+            var availableStructures = {}
+            
+            for (var i in CONTROLLER_STRUCTURES)
+            {
+                var availableArray = CONTROLLER_STRUCTURES[i]
+                var alreadyPlace = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, {
+                    filter: { structureType: i }
+                });
+                availableStructures[i] = availableArray[room.controller.level] - alreadyPlace.length
+            }
+            
             this.Rooms[room] = 
             {
                 RoomControllerLevel: room.controller.level,
                 EnergyAvailable: room.energyAvailable,
                 NumberMyCreeps: room.find(FIND_MY_CREEPS).length,
-                NumberEnemiesCreeps: room.find(FIND_HOSTILE_CREEPS).length
+                NumberEnemiesCreeps: room.find(FIND_HOSTILE_CREEPS).length,
+                AvailableStructures: availableStructures,
             }
         }
     }
@@ -49,6 +61,27 @@ WorldState.prototype.CalculateColonyState = function(playerName)
             this.NumberOfCreepsSpawing += 1
         else
             this.NumberOfCreeps += 1
+    }
+    
+    console.log(" workTracker: " + workTracker)
+    
+    for (var workRoom in workTracker._Work)
+    {
+        console.log(" workRoom: " + workRoom) 
+    
+        for (var i in workTracker._Work[workRoom])
+        {
+            var work = workTracker._Work[workRoom][i]
+            console.log("  work: " + work)     
+            
+            var assignedCreeps = work.GetAssignCreeps()
+            
+            var workType = work.GetWorkType() 
+            if (workType == "HarvestSource")
+                this.CreepInRoles.CREEP_HARVESTERS += assignedCreeps.length
+            else if (workType == "BuildStructure")
+                this.CreepInRoles.CREEP_BUILDERS += assignedCreeps.length
+        }
     }
 }
 

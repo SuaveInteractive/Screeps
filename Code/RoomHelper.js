@@ -1,9 +1,4 @@
-this._Debugging = true
-
-if (!Memory.ParsedRooms)
-{
-    Memory.ParsedRooms = {}
-}
+this._Debugging = false
 
 module.exports = {
 
@@ -13,10 +8,8 @@ module.exports = {
             return
 
         if (!Memory.ParsedRooms)
-        {
             Memory.ParsedRooms = {}
-        }
-        
+            
         Memory.ParsedRooms[room] = {};
 
         // ****** SOURCES *****
@@ -33,11 +26,11 @@ module.exports = {
             {
                 _.forEach(col, function (cell, x)
                 {
-                    if (sourcePos.x != x && sourcePos.y != y)
+                    if (sourcePos.x != x || sourcePos.y != y)
                     {
                         for (i = 0; i < cell.length; i++)
                         {
-                        if (cell == "plain" || cell == "swamp")
+                            if (cell == "plain" || cell == "swamp")
                             {
                                 harvesterPositions.push(new RoomPosition(x, y, room.name));
                             }
@@ -46,9 +39,10 @@ module.exports = {
                 });
             });
 
-            Memory.ParsedRooms[room].Sources[source] =
+            Memory.ParsedRooms[room].Sources[source.id] =
                 {
-                    SourcePos: sourcePos,
+                    id: source.id,
+                    SourcePos: new RoomPosition(sourcePos.x, sourcePos.y, sourcePos.roomName),
                     HarvesterPositions: harvesterPositions,
                 }
         });

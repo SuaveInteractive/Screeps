@@ -6,7 +6,7 @@ module.exports = {
     SpawnCreep: function(room)
     {
         var spawner = this.GetBestSpawner(room)
-        if (spawner /*&& Game.structures[spawner]*/)
+        if (spawner && Game.structures[spawner])
         {
             return Game.structures[spawner].createCreep([WORK, CARRY, MOVE])
         }
