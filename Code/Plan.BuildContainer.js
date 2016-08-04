@@ -60,7 +60,7 @@ BuildContainer.prototype.DeserializedData = function(data)
     this._WorkId = data.WorkId
 }
 
-BuildContainer.prototype.Run = function(workTracker)
+BuildContainer.prototype.Run = function(workTracker, recruiter)
 {
 	if (this._Debugging)
 		console.log("Plan.BuildContainer -> run [" + workTracker + "]")

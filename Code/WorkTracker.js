@@ -3,7 +3,7 @@ var WorkFactory = require("WorkFactory")
 
 function WorkTracker()
 {
-    this._Debugging = false
+    this._Debugging = true
     
     if (this._Debugging)
         console.log(" WorkTracker.Contructor")
@@ -28,12 +28,41 @@ WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
     return newWork.GetWorkId()
 }
 
+WorkTracker.prototype.DestroyWorkTask = function(room, workId)
+{
+    if (this._Debugging)
+        console.log(" WorkTracker.prototype.DestroyWorkTask: room [" + room + "] workId [" + workId + "]")
+        
+    var work = this.GetWorkTask(room, workId)
+    
+    if (work)
+    {
+        var unassignedCreeps = work.Destroy(room, this)
+        console.log(" unassignedCreeps: " + unassignedCreeps)
+        
+        var index = this._Work[room].indexOf(work)
+        
+        this._Work[room].splice(index, 1)
+    }
+    else
+    {
+        console.log("##### Could not DestroyWorkTask: room [" + room + "] workId [" + workId + "] #####")
+    }
+}
+
+
 WorkTracker.prototype.GetWorkTask = function(room, workId)
 {
     if (this._Debugging)
         console.log(" WorkTracker.GetWorkTask: room [" + room + "] workId [" + workId + "]")  
         
-    // TODO
+    for (var i in this._Work[room])
+    {
+        var work = this._Work[room][i]
+        if (work.GetWorkId() == workId)
+            return work
+    }
+    return null
 }
 
 WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepName)

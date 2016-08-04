@@ -4,6 +4,7 @@ if (!Memory.HiveMind)
     Memory.HiveMind.CurrentPlans = []
     
     Memory.HiveMind.TrackedWork = {}
+    Memory.HiveMind.Recruiter = {}
 }
 
 var calculateNeeds = require('AI.CalculateNeeds');
@@ -18,6 +19,7 @@ var worldState = require('WorldState');
 
 var WorkTracker = require('WorkTracker')
 var resouceAssigner = require('ResourceAssigner')
+var Recruiter = require('Recruiter')
 
 module.exports = {
     _Debugging: false,
@@ -27,17 +29,20 @@ module.exports = {
     {
         console.log("\nHiveAgent - Run");
         
-        var wt = new WorkTracker()
-        wt.DeserializedData(Memory.HiveMind.TrackedWork)
+        var workTracker = new WorkTracker()
+        workTracker.DeserializedData(Memory.HiveMind.TrackedWork)
+        
+        var recruiter = new Recruiter()
+        recruiter.DeserializedData(Memory.HiveMind.Recruiter)
         
         var ws = new worldState.WorldState()
-        ws.CalculateColonyState(this._Player, wt)
+        ws.CalculateColonyState(this._Player, workTracker)
         
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName]
         
-            wt.Run(room)
+            workTracker.Run(room)
         
             resouceAssigner.UpdateCreeps(room)
             
@@ -47,7 +52,7 @@ module.exports = {
             currentPlans = evalPlans.Evaluate(currentPlans)
             
             // Calaculate the needs of the Colony based on the current plans
-            var needs = calculateNeeds.Calculate(room, ws, currentPlans, wt)
+            var needs = calculateNeeds.Calculate(room, ws, currentPlans, workTracker)
             
             // Create new plans based on needs
             var newPlans = createPlans.Create(room, needs)
@@ -59,12 +64,13 @@ module.exports = {
             currentPlans = currentPlans.concat(selectPlans.Select(room, newPlans))
             
             // Execute the current plans
-            executePlans.Execute(currentPlans, wt)
+            executePlans.Execute(currentPlans, workTracker, recruiter)
 
             this._SerialiseCurrentPlans(currentPlans)
         }
         
-        Memory.HiveMind.TrackedWork = wt.SerializedData(Memory.HiveMind.TrackedWork)
+        Memory.HiveMind.TrackedWork = workTracker.SerializedData()
+        Memory.HiveMind.Recruiter = recruiter.SerializedData()
     },
     
     _SerialiseCurrentPlans: function(currentPlans)

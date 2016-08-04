@@ -1,6 +1,7 @@
-// ##### Object ######
+// ##### Statics ######
 var CurrentWorkId = 0;
 
+// ##### Object ######
 function Work(type, data)
 {
     this._Debugging = false
@@ -21,6 +22,16 @@ function Work(type, data)
     this._Finished = false 
     this._AssignedCreeps = []
     this._Parent = data.Parent
+}
+
+Work.prototype.Destroy = function()
+{
+    if (this._Debugging)
+        console.log("Work Destroy")
+    
+    var creeps =  this._AssignedCreeps 
+    this._AssignedCreeps = []
+    return creeps
 }
 
 Work.prototype.GetWorkType = function()

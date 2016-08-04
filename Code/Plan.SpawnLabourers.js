@@ -1,5 +1,5 @@
 // ##### Requires ######
-var recruiter = require('Recruiter');
+var Recruiter = require('Recruiter');
 var Plan = require('Plan');
 
 var resourceAssigner = require('ResourceAssigner');
@@ -64,8 +64,11 @@ SpawnLabourers.prototype.DeserializedData = function(data)
     this._SpawningCreepName = data.SpawningCreepName
 }
 
-SpawnLabourers.prototype.Run = function(workTracker)
+SpawnLabourers.prototype.Run = function(workTracker, recruiter)
 {
+    if (this.GetFinished())
+        return
+    
 	if (this._Debugging)
 		console.log("SpawnLabourers -> run [" + workTracker + "]")
 
@@ -128,6 +131,9 @@ SpawnLabourers.prototype.Run = function(workTracker)
         if (this._Debugging)
             console.log(" SpawnLabourers.prototype.Run PLAN FINISHED")
             
+        var unassigedCreeps = workTracker.DestroyWorkTask(room, this._RefillSpawnWorkId)
+        
+        
         this.SetFinished(true)
     }
 }

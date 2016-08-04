@@ -5,7 +5,7 @@ var roomHelper = require('RoomHelper');
 module.exports = {
     _Debugging: true,
     
-    Execute: function (plans, wt)
+    Execute: function (plans, workTracker, recruiter)
     {
         var debugging = this._Debugging
 		if (debugging)
@@ -18,7 +18,7 @@ module.exports = {
     		if (debugging)
 			    console.log("  Plan Id: " + plan.GetId())
 			
-		    plan.Run(wt)
+		    plan.Run(workTracker, recruiter)
 		}
     }
 };

@@ -16,6 +16,7 @@ RoleTransferResource.Run = function(creep, data)
         }
     }
     else */
+    if (this.CanTransfer(creep))
     {
     //    creep.memory.transfering = true
         
@@ -44,9 +45,18 @@ RoleTransferResource.Run = function(creep, data)
             }
         }
         
-      //  if (creep.carry.energy == 0)
-      //      creep.memory.transfering = null
+        return true
+        
     }
+    else
+    {
+        return false
+    }
+}
+
+RoleTransferResource.CanTransfer = function(creep)
+{
+    return creep.carry.energy > 0
 }
 
 module.exports = RoleTransferResource;

@@ -20,6 +20,17 @@ function RefillSpawn(room, data, workTracker)
 
 RefillSpawn.prototype = Object.create(Work.prototype)
 
+RefillSpawn.prototype.Destroy = function(room, workTracker)
+{
+    var creeps = []
+    
+    creeps.concat(Work.prototype.Destroy.call(this, workTracker))
+    creeps.concat(workTracker.DestroyWorkTask(room, this._HarvestWorkId))
+    creeps.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
+    
+    return creeps
+}
+
 RefillSpawn.prototype.Run = function(room, workTracker)
 {
 	if (this._Debugging)
@@ -37,7 +48,8 @@ RefillSpawn.prototype.Run = function(room, workTracker)
         }
         else
         {
-            
+            workTracker.AssignCreepToWorkId(room, this._TransferWorkId, assignedCreeps[i])
+            this.UnassignCreep(assignedCreeps[i])
         }
     }
 }

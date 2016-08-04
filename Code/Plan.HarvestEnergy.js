@@ -1,5 +1,5 @@
 // ##### Requires ######
-var recruiter = require('Recruiter');
+var Recruiter = require('Recruiter');
 var Plan = require('Plan');
 
 var worldState = require('WorldState');
@@ -67,7 +67,7 @@ HarvestEnergy.prototype.DeserializedData = function(data)
     this._SpawningCreepName = data.SpawningCreepName
 }
 
-HarvestEnergy.prototype.Run = function(wt)
+HarvestEnergy.prototype.Run = function(wt, recruiter)
 {
 	if (this._Debugging)
 		console.log("Plan.HarvestEnergy -> run")
@@ -113,7 +113,7 @@ HarvestEnergy.prototype.Run = function(wt)
     
     if (this._NumberOfLaborersSpawned < this._NumberOfLaborersToSpawn)
     {
-        var result = recruiter.SpawnCreep(room)
+        var result = Recruiter.SpawnCreep(room)
 	    if (_.isString(result))
 	    {
 	        this._SpawningCreepName = result
