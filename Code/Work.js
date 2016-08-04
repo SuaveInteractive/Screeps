@@ -4,7 +4,7 @@ var CurrentWorkId = 0;
 // ##### Object ######
 function Work(type, data)
 {
-    this._Debugging = false
+    this._Debugging = true
     
     if (this._Debugging)
         console.log("Work Constructor")
@@ -27,7 +27,7 @@ function Work(type, data)
 Work.prototype.Destroy = function()
 {
     if (this._Debugging)
-        console.log("Work Destroy")
+        console.log("Work Destroy: Type [" + this._Type + "] Id [" + this._Id + "]")
     
     var creeps =  this._AssignedCreeps 
     this._AssignedCreeps = []

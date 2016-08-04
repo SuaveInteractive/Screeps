@@ -36,6 +36,17 @@ Recruiter.prototype.GetBestSpawner = function(room)
     };
 }
 
+Recruiter.prototype.AddUnassignedCreeps = function(creeps)
+{
+    if (this._Debugging)
+        console.log(" Recruiter.prototype.AddUnassignedCreeps creeps [" + creeps + "]")
+    
+    if (creeps == null)
+        return
+        
+    this._UnassignedCreeps = this._UnassignedCreeps.concat(creeps)
+}
+
 Recruiter.prototype.DeserializedData = function(data)
 {
     this._UnassignedCreeps = data.UnassignedCreeps

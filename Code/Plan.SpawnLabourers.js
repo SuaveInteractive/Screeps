@@ -133,6 +133,7 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             
         var unassigedCreeps = workTracker.DestroyWorkTask(room, this._RefillSpawnWorkId)
         
+        recruiter.AddUnassignedCreeps(unassigedCreeps)
         
         this.SetFinished(true)
     }

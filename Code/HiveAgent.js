@@ -5,6 +5,7 @@ if (!Memory.HiveMind)
     
     Memory.HiveMind.TrackedWork = {}
     Memory.HiveMind.Recruiter = {}
+    Memory.HiveMind.Recruiter.UnassignedCreeps = []
 }
 
 var calculateNeeds = require('AI.CalculateNeeds');

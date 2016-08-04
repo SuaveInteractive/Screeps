@@ -22,13 +22,13 @@ RefillSpawn.prototype = Object.create(Work.prototype)
 
 RefillSpawn.prototype.Destroy = function(room, workTracker)
 {
-    var creeps = []
+    var ret = []
     
-    creeps.concat(Work.prototype.Destroy.call(this, workTracker))
-    creeps.concat(workTracker.DestroyWorkTask(room, this._HarvestWorkId))
-    creeps.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
+    ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
+    ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestWorkId))
+    ret = ret.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
     
-    return creeps
+    return ret
 }
 
 RefillSpawn.prototype.Run = function(room, workTracker)

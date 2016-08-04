@@ -38,11 +38,12 @@ WorkTracker.prototype.DestroyWorkTask = function(room, workId)
     if (work)
     {
         var unassignedCreeps = work.Destroy(room, this)
-        console.log(" unassignedCreeps: " + unassignedCreeps)
         
         var index = this._Work[room].indexOf(work)
         
         this._Work[room].splice(index, 1)
+        
+        return unassignedCreeps
     }
     else
     {
