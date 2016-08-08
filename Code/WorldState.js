@@ -16,7 +16,7 @@ function WorldState()
     this.CreepInRoles.CREEP_HARVESTERS = 0
 }
 
-WorldState.prototype.CalculateColonyState = function(playerName, workTracker)
+WorldState.prototype.CalculateColonyState = function(playerName, workTracker, recruiter)
 {
     // World
     this.TotalEnergyAvailable = 0
@@ -63,17 +63,13 @@ WorldState.prototype.CalculateColonyState = function(playerName, workTracker)
             this.NumberOfCreeps += 1
     }
     
-    console.log(" workTracker: " + workTracker)
+    this.NumberOfUnassignedCreeps = recruiter.GetUnassignedCreeps().length
     
     for (var workRoom in workTracker._Work)
     {
-        console.log(" workRoom: " + workRoom) 
-    
         for (var i in workTracker._Work[workRoom])
         {
             var work = workTracker._Work[workRoom][i]
-            console.log("  work: " + work)     
-            
             var assignedCreeps = work.GetAssignCreeps()
             
             var workType = work.GetWorkType() 

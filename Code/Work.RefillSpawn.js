@@ -4,7 +4,7 @@ var Work = require('Work')
 // ##### Object ######
 function RefillSpawn(room, data, workTracker)
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("RefillSpawn constructor")

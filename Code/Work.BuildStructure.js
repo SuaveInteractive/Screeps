@@ -4,20 +4,53 @@ var Work = require('Work');
 // ##### Object ######
 function BuildStructure(room, data, workTracker)
 {
-    this._Debugging = false
+    this._Debugging = true
     
     if (this._Debugging)
         console.log("BuildStructure constructor")
         
     Work.call(this, "BuildStructure", data)
+    
+    this._ConstructionSiteId = data.ConstructionSiteId
+    
+    // TODO: This should be collect resources
+    if (data.HarvestWorkId == null)
+        this._HarvestWorkId = workTracker.CreateWorkTask(room, 'HarvestSource', {Parent: this.GetWorkId(), HarvestSite: data.HarvestSiteId})
 }
 
 BuildStructure.prototype = Object.create(Work.prototype)
 
-BuildStructure.prototype.Run = function(state)
+BuildStructure.prototype.Destroy = function(room, workTracker)
+{
+    var ret = []
+    
+    ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
+    ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestWorkId))
+    
+    return ret
+}
+
+BuildStructure.prototype.Run = function(room, workTracker)
 {
 	if (this._Debugging)
-		console.log("BuildStructure -> run")
+		console.log("BuildStructure -> run ConstructionSiteId [" + this._ConstructionSiteId + "]")
+		
+	var assignedCreeps = this.GetAssignCreeps()
+    for (var i in assignedCreeps)
+    {
+        var creep = Game.creeps[assignedCreeps[i]]
+        
+        if (creep.carry.energy < 1)
+        {
+            workTracker.AssignCreepToWorkId(room, this._HarvestWorkId, assignedCreeps[i])
+            this.UnassignCreep(assignedCreeps[i])
+        }
+        else
+        {
+           // workTracker.AssignCreepToWorkId(room, this._TransferWorkId, assignedCreeps[i])
+        //    this.UnassignCreep(assignedCreeps[i])
+        }
+    }
 }
 
 BuildStructure.prototype.SerializedData = function()
@@ -25,6 +58,7 @@ BuildStructure.prototype.SerializedData = function()
     var data = Work.prototype.SerializedData.call(this)
     
     data.ConstructionSiteId = this._ConstructionSiteId 
+    data.HarvestWorkId = this._HarvestWorkId
     
     return data
 }
@@ -34,6 +68,7 @@ BuildStructure.prototype.DeserializedData = function(data)
     Work.prototype.DeserializedData.call(this, data)
         
     this._ConstructionSiteId = data.ConstructionSiteId
+    this._HarvestWorkId = data.HarvestWorkId
 }
 
 // ##### Exports ######

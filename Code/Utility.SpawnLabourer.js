@@ -1,7 +1,7 @@
 // ##### Object ######
 function UtilitySpawnLabourer()
 {
-    this._Debugging = true
+    this._Debugging = false
 }
 
 UtilitySpawnLabourer.prototype.Calculate = function(room, worldState)
@@ -10,7 +10,7 @@ UtilitySpawnLabourer.prototype.Calculate = function(room, worldState)
     
     var result = 0.0
     
-    if (numberOfCreeps < 3)
+    if (numberOfCreeps < 1)
         result = 1.0
 
     result.toFixed(2)

@@ -1,7 +1,7 @@
 // ##### Object ######
 function UtilityEnergy()
 {
-    this._Debugging = true
+    this._Debugging = false
 }
 
 UtilityEnergy.prototype.Calculate = function(world)

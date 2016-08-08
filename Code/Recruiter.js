@@ -4,7 +4,7 @@ var ERR_NO_SPAWNER_AVAILIBLE = -18
     
 function Recruiter()
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("Recruiter Constructor")
@@ -45,6 +45,23 @@ Recruiter.prototype.AddUnassignedCreeps = function(creeps)
         return
         
     this._UnassignedCreeps = this._UnassignedCreeps.concat(creeps)
+}
+
+Recruiter.prototype.RemoveUnassignedCreeps = function(creep)
+{
+    if (this._Debugging)
+        console.log(" Recruiter.prototype.RemoveUnassignedCreeps creep [" + creep + "]")
+    
+    if (creep == null)
+        return
+        
+    var index = this._UnassignedCreeps.indexOf(creep)
+    this._UnassignedCreeps.splice(index, 1)
+}
+
+Recruiter.prototype.GetUnassignedCreeps = function()
+{
+    return this._UnassignedCreeps
 }
 
 Recruiter.prototype.DeserializedData = function(data)

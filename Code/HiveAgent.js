@@ -37,7 +37,7 @@ module.exports = {
         recruiter.DeserializedData(Memory.HiveMind.Recruiter)
         
         var ws = new worldState.WorldState()
-        ws.CalculateColonyState(this._Player, workTracker)
+        ws.CalculateColonyState(this._Player, workTracker, recruiter)
         
         for (var roomName in Game.rooms)
         {
@@ -53,7 +53,7 @@ module.exports = {
             currentPlans = evalPlans.Evaluate(currentPlans)
             
             // Calaculate the needs of the Colony based on the current plans
-            var needs = calculateNeeds.Calculate(room, ws, currentPlans, workTracker)
+            var needs = calculateNeeds.Calculate(room, ws, currentPlans, workTracker, recruiter)
             
             // Create new plans based on needs
             var newPlans = createPlans.Create(room, needs)
@@ -108,8 +108,6 @@ module.exports = {
         
         Memory.HiveMind.CurrentPlans.forEach(function(item)
         {
-            console.log("item.PlanId: " + item.PlanId)
-            
             var plan = new AIPlans.AIPlans[item.PlanId](room)
             
             plan.DeserializedData(item.Data)

@@ -4,7 +4,7 @@ var CurrentWorkId = 0;
 // ##### Object ######
 function Work(type, data)
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("Work Constructor")

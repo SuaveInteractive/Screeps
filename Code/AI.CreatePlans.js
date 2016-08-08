@@ -1,7 +1,7 @@
 var AIPlans = require('Plans');
 
 module.exports = {
-	_Debugging: true,
+	_Debugging: false,
 	
     Create: function (room, needs)
     {

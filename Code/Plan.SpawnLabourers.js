@@ -10,10 +10,10 @@ function SpawnLabourers(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = true
+    this._Debugging = false
     
     this._NumberOfLaborersSpawned = 0
-    this._NumberOfLaborersToSpawn = 3
+    this._NumberOfLaborersToSpawn = 1
 }
 
 SpawnLabourers.prototype = Object.create(Plan.Plan.prototype)
@@ -82,6 +82,7 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
         {
             var spawnPos = spawns[spawn].pos
 
+            // TODO: Should be collect energy
             var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
         
             this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteId: miningSiteId, SpawnId: spawns[spawn].id})

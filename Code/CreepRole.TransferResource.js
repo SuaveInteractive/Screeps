@@ -1,25 +1,9 @@
 var RoleTransferResource = {}
 
 RoleTransferResource.Run = function(creep, data) 
-{/*
-    //if(creep.carry.energy < creep.carryCapacity && creep.memory.transfering != true) 
-    if (this.CanHarvest(creep))
-    {
-        var harvestTarget = Game.getObjectById(data.HarvestSite)
-        var result = creep.harvest(harvestTarget)
-        if(result == ERR_NOT_IN_RANGE) 
-        {
-            var result = creep.moveTo(harvestTarget);
-            
-            if (result != OK)
-                creep.say("Cant Move")
-        }
-    }
-    else */
+{
     if (this.CanTransfer(creep))
     {
-    //    creep.memory.transfering = true
-        
         var targets = creep.room.find(FIND_STRUCTURES, 
         {
                 filter: (structure) => 

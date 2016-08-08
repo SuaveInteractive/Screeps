@@ -8,16 +8,16 @@ UtilityBuildContainer.prototype.Calculate = function(room, worldState)
 {
     var availableStructures = worldState.Rooms[room].AvailableStructures
     var numberOfContainersAvailable = availableStructures.container
-    var numberOfHarvesters = worldState.CreepInRoles.CREEP_HARVESTERS
+    var numberOfUnassignedCreeps = worldState.NumberOfUnassignedCreeps
      
     var result = 0.00
     
-    if (numberOfHarvesters >= 3)
-        result = numberOfContainersAvailable / 5
+    if (numberOfUnassignedCreeps > 0 && numberOfContainersAvailable > 0)
+        result = 1.0
         
 	return	{
 				UtilType: 'BUILD_CONTAINER', 
-				Value: result
+				Value: Math.min(result, 1.0)
 			}
 }
 
