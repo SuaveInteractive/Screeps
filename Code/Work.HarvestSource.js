@@ -6,7 +6,7 @@ var RoleHarvester = require('CreepRole.Harvester')
 // ##### Object ######
 function HarvestSource(room, data, workTracker)
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("HarvestSource constructor")

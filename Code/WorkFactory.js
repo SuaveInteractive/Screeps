@@ -2,6 +2,7 @@ var BuildStructure = require("Work.BuildStructure")
 var HarvestSource = require("Work.HarvestSource")
 var TransferResource = require("Work.TransferResource")
 var RefillSpawn = require("Work.RefillSpawn")
+var GatherResource = require("Work.GatherResource")
 
 module.exports = {
     _Debugging: false,
@@ -9,7 +10,7 @@ module.exports = {
     GetWork: function(workType, room, data, workTracker)
     {
         if (this._Debugging)
-            console.log(" WorkFacotry: workType [" + workType + "] room [" + room + "] data [" + data + "]")
+            console.log(" WorkFactory: workType [" + workType + "] room [" + room + "] data [" + data + "]")
             
         var newWork = null
         
@@ -21,6 +22,8 @@ module.exports = {
             newWork = new TransferResource(room, data, workTracker)
         else if (workType == "RefillSpawn")
             newWork = new RefillSpawn(room, data, workTracker)
+        else if (workType == "GatherResource")
+            newWork = new GatherResource(room, data, workTracker)
             
         if (newWork != null)    
         {

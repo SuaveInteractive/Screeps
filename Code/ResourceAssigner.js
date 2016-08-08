@@ -1,46 +1,50 @@
 var ResourceAssigner = {}
-ResourceAssigner._Debugging = false
+ResourceAssigner._Debugging = true
 
 if (!Memory.ResourceSites)
 {
     Memory.ResourceSites = {}
 }
 
-ResourceAssigner.GetAvailableMiningLocation = function(room, resource, position)
+ResourceAssigner.GetAvailableMiningSite = function(room, resource, position, workTracker)
 {
     if (this._Debugging)
-        console.log(" ResourceAssigner.GetAvailableMiningLocation: " + position)
+        console.log(" ResourceAssigner.GetAvailableMiningSite: position [" + position + "]")
     
     if (!Memory.ResourceSites || !Memory.ResourceSites[room] || !Memory.ResourceSites[room].Parsed)
-        this.CreateResourceSites(room)
+        this.CreateResourceSites(room, workTracker)
     
     var sortedSource = this.GetClosestResourceSites(room, position)
     
     var selectedSite = null
     for (var i in sortedSource)
     {
+        var workTask = workTracker.GetWorkTask(room, sortedSource[i].site.WorkId)
+        var numberOfWorkers = workTask.GetAssignCreeps().length
+        
         if (this._Debugging)
         {
             console.log(" Site: " + sortedSource[i].site)
             console.log(" Distance: " + sortedSource[i].distance)
             console.log(" Id: " + sortedSource[i].id)
-            console.log(" AssignedWorkers: " + sortedSource[i].site.AssignedWorkers.length)
             console.log(" WorkingPositions: " + sortedSource[i].site.WorkingPositions)
             console.log(" MaximumWorkingCapacity: " + sortedSource[i].site.MaximumWorkingCapacity)
             console.log(" CurrentWorkingCapacity: " + sortedSource[i].site.CurrentWorkingCapacity)
+            console.log(" Containers: " + sortedSource[i].site.Containers)
+            console.log(" WorkId: " + sortedSource[i].site.WorkId + " [" + numberOfWorkers + "]")
         }
         
         if (sortedSource[i].site.CurrentWorkingCapacity < sortedSource[i].site.MaximumWorkingCapacity &&
-            sortedSource[i].site.AssignedWorkers.length < sortedSource[i].site.WorkingPositions)
+            numberOfWorkers < sortedSource[i].site.WorkingPositions)
         {
-            selectedSite = sortedSource[i].id
+            selectedSite = sortedSource[i]
             break
         }
     }
     
     if (selectedSite == null)
     {
-        console.log("Could not find a resource site to work [" + room + "]")
+        console.log("##### Could not find a resource site to work [" + room + "] #####")
         return null    
     }
     else
@@ -156,7 +160,7 @@ ResourceAssigner.GetClosestResourceSites = function(room, position)
     return sortedSources
 }
 
-ResourceAssigner.CreateResourceSites = function(room)
+ResourceAssigner.CreateResourceSites = function(room, workTracker)
 {
     if (!Memory.ResourceSites)
     {
@@ -170,6 +174,7 @@ ResourceAssigner.CreateResourceSites = function(room)
     for (var hash in roomSources)
     {
         var source = roomSources[hash]
+        var workId = workTracker.CreateWorkTask(room, 'HarvestSource', {HarvestSite: source.id})
 
         Memory.ResourceSites[room].Sites[source.id] = 
         {
@@ -178,6 +183,8 @@ ResourceAssigner.CreateResourceSites = function(room)
             WorkingPositions: source.HarvesterPositions.length,
             MaximumWorkingCapacity: 1.0,
             CurrentWorkingCapacity: 0,
+            Containers: [],
+            WorkId: workId,
         }
     }
     Memory.ResourceSites[room].Parsed = true

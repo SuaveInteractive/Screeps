@@ -40,7 +40,7 @@ ConstructionSitesGenerator.GetConstructionSite = function(room, structureType)
             if (!Memory.ConstructionSites[structureType])
                 Memory.ConstructionSites[structureType] = { Sites: [] }
                 
-            Memory.ConstructionSites[structureType].Sites.push({id: constructionSiteId})
+            Memory.ConstructionSites[structureType].Sites.push({Id: constructionSiteId, Room: room, PosX: roomPos.x, PosY: roomPos.y})
             
             if (this._Debugging)
                 console.log("ConstructionSitesGenerator.GetConstructionSite constructionSiteId: " + constructionSiteId)
@@ -48,6 +48,20 @@ ConstructionSitesGenerator.GetConstructionSite = function(room, structureType)
             return constructionSiteId
         }
     }
+}
+
+ConstructionSitesGenerator.GetConstructionSiteById = function(room, siteId)
+{
+    for (var structureType in Memory.ConstructionSites)
+    {
+        for (var i in Memory.ConstructionSites[structureType].Sites)
+        {
+            var site = Memory.ConstructionSites[structureType].Sites[i]
+            if (site.Id == siteId)
+                return site
+        }
+    }
+    console.log("##### Could not find Construction Site by Id: room [" + room + "] siteId [" + siteId + "] #####")
 }
 
 module.exports = ConstructionSitesGenerator;

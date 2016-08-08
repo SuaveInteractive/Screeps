@@ -3,7 +3,7 @@ var WorkFactory = require("WorkFactory")
 
 function WorkTracker()
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log(" WorkTracker.Contructor")
@@ -63,6 +63,8 @@ WorkTracker.prototype.GetWorkTask = function(room, workId)
         if (work.GetWorkId() == workId)
             return work
     }
+    
+    console.log("##### WorkTracker: Cannot find WorkTask. room [" + room + "] workId [" + workId + "] #####")
     return null
 }
 

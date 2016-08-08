@@ -67,7 +67,7 @@ HarvestEnergy.prototype.DeserializedData = function(data)
     this._SpawningCreepName = data.SpawningCreepName
 }
 
-HarvestEnergy.prototype.Run = function(wt, recruiter)
+HarvestEnergy.prototype.Run = function(workTracker, recruiter)
 {
 	if (this._Debugging)
 		console.log("Plan.HarvestEnergy -> run")
@@ -86,9 +86,9 @@ HarvestEnergy.prototype.Run = function(wt, recruiter)
         {
             var spawnPos = spawns[spawn].pos
 
-            var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
+            var harvestingSite = resourceAssigner.GetAvailableMiningSite(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName), workTracker)
         
-            this._WorkId = wt.CreateWorkTask(room, 'HarvestSource', {HarvestSite: miningSiteId})
+            this._WorkId = harvestingSite.site.WorkId
         }
     }
     
@@ -104,7 +104,7 @@ HarvestEnergy.prototype.Run = function(wt, recruiter)
             if (this._Debugging)
                 console.log(" HarvestEnergy.prototype.Run SPAWNED")
             
-            wt.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
+            workTracker.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
             
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    

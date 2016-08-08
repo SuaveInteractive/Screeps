@@ -13,9 +13,11 @@ function BuildStructure(room, data, workTracker)
     
     this._ConstructionSiteId = data.ConstructionSiteId
     
-    // TODO: This should be collect resources
-    if (data.HarvestWorkId == null)
-        this._HarvestWorkId = workTracker.CreateWorkTask(room, 'HarvestSource', {Parent: this.GetWorkId(), HarvestSite: data.HarvestSiteId})
+    if (data.GatherResourceWorkId == null)
+    {
+        console.log(" BuildStructure - data.RoomPos: " + data.RoomPos)
+        this._GatherResourceWorkId = workTracker.CreateWorkTask(room, 'GatherResource', {Parent: this.GetWorkId(), RoomPos: data.RoomPos})
+    }
 }
 
 BuildStructure.prototype = Object.create(Work.prototype)
@@ -25,7 +27,7 @@ BuildStructure.prototype.Destroy = function(room, workTracker)
     var ret = []
     
     ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
-    ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestWorkId))
+    ret = ret.concat(workTracker.DestroyWorkTask(room, this._GatherResourceWorkId))
     
     return ret
 }
@@ -42,7 +44,7 @@ BuildStructure.prototype.Run = function(room, workTracker)
         
         if (creep.carry.energy < 1)
         {
-            workTracker.AssignCreepToWorkId(room, this._HarvestWorkId, assignedCreeps[i])
+            workTracker.AssignCreepToWorkId(room, this._GatherResourceWorkId, assignedCreeps[i])
             this.UnassignCreep(assignedCreeps[i])
         }
         else
@@ -58,7 +60,7 @@ BuildStructure.prototype.SerializedData = function()
     var data = Work.prototype.SerializedData.call(this)
     
     data.ConstructionSiteId = this._ConstructionSiteId 
-    data.HarvestWorkId = this._HarvestWorkId
+    data.GatherResourceWorkId = this._GatherResourceWorkId
     
     return data
 }
@@ -68,7 +70,7 @@ BuildStructure.prototype.DeserializedData = function(data)
     Work.prototype.DeserializedData.call(this, data)
         
     this._ConstructionSiteId = data.ConstructionSiteId
-    this._HarvestWorkId = data.HarvestWorkId
+    this._GatherResourceWorkId = data.GatherResourceWorkId
 }
 
 // ##### Exports ######

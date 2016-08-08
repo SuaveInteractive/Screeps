@@ -83,9 +83,9 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             var spawnPos = spawns[spawn].pos
 
             // TODO: Should be collect energy
-            var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
+            var miningSite = resourceAssigner.GetAvailableMiningSite(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName), workTracker)
         
-            this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteId: miningSiteId, SpawnId: spawns[spawn].id})
+            this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteId: miningSite.Id, SpawnId: spawns[spawn].id})
         }
     }
     

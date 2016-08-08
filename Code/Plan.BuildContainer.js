@@ -66,11 +66,18 @@ BuildContainer.prototype.Run = function(workTracker, recruiter)
     
     if (this._BuildStructureWorkId == null)
     {
-        // TODO: Should be collect resources
-        var miningSiteId = resourceAssigner.GetAvailableMiningLocation(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName))
-        
         var constructionSiteId = constructionSiteGenerator.GetConstructionSite(room, STRUCTURE_CONTAINER)
-        this._BuildStructureWorkId = workTracker.CreateWorkTask(room, 'BuildStructure', {ConstructionSiteId: constructionSiteId, HarvestSiteId: miningSiteId})
+        
+        if (constructionSiteId != null)
+        {
+            var constructionSite = constructionSiteGenerator.GetConstructionSiteById(room, constructionSiteId)
+            
+            var roomPos = new RoomPosition(constructionSite.PosX, constructionSite.PosY, room.name)
+            
+            console.log(" BuildContainer - roomPos: " + roomPos)
+            
+            this._BuildStructureWorkId = workTracker.CreateWorkTask(room, 'BuildStructure', {ConstructionSiteId: constructionSiteId, RoomPos: roomPos})
+        }
     }
 	
 	var unassignedCreeps = recruiter.GetUnassignedCreeps()
@@ -78,7 +85,7 @@ BuildContainer.prototype.Run = function(workTracker, recruiter)
 	{
 	    var creep = unassignedCreeps[i]
 	    
-	    console.log(" Plan.BuildContainer Assiging [${creep}] to [${this._BuildStructureWorkId}]")
+	    console.log(" Plan.BuildContainer Assigned [${creep}] to [${this._BuildStructureWorkId}]")
 	    
 	    recruiter.RemoveUnassignedCreeps(creep)
 	    workTracker.AssignCreepToWorkId(room, this._BuildStructureWorkId, creep)
