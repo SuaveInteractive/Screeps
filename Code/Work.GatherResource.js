@@ -16,10 +16,8 @@ function GatherResource(room, data, workTracker)
     if (data.HarvestWorkId == null)
     {
         var roomPos = data.RoomPos
-        
         var harvestingSite = resourceAssigner.GetAvailableMiningSite(room, RESOURCE_ENERGY, roomPos, workTracker)
-        
-        this._HarvestWorkId = harvestingSite.site.WorkId
+        this._HarvestWorkId = harvestingSite.WorkId
     }
 }
 
@@ -37,7 +35,7 @@ GatherResource.prototype.Run = function(room, workTracker)
         
         if (creep.carry.energy < 1)
         {
-            workTracker.AssignCreepToWorkId(room, this._HarvestWorkId, assignedCreeps[i])
+            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._HarvestWorkId, assignedCreeps[i])
             this.UnassignCreep(assignedCreeps[i])
         }
         

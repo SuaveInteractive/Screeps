@@ -79,16 +79,18 @@ BuildContainer.prototype.Run = function(workTracker, recruiter)
             this._BuildStructureWorkId = workTracker.CreateWorkTask(room, 'BuildStructure', {ConstructionSiteId: constructionSiteId, RoomPos: roomPos})
         }
     }
-	
-	var unassignedCreeps = recruiter.GetUnassignedCreeps()
-	for (var i in unassignedCreeps)
+	else
 	{
-	    var creep = unassignedCreeps[i]
-	    
-	    console.log(" Plan.BuildContainer Assigned [${creep}] to [${this._BuildStructureWorkId}]")
-	    
-	    recruiter.RemoveUnassignedCreeps(creep)
-	    workTracker.AssignCreepToWorkId(room, this._BuildStructureWorkId, creep)
+    	var unassignedCreeps = recruiter.GetUnassignedCreeps()
+    	for (var i in unassignedCreeps)
+    	{
+    	    var creep = unassignedCreeps[i]
+    	    
+    	    console.log(" Plan.BuildContainer Assigned [" + creep + "] to [" + this._BuildStructureWorkId + "]")
+    	    
+    	    recruiter.RemoveUnassignedCreeps(creep)
+    	    workTracker.AssignCreepToWorkId(room, null, this._BuildStructureWorkId, creep)
+    	}
 	}
     
 }

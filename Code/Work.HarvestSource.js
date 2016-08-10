@@ -22,16 +22,17 @@ HarvestSource.prototype.Run = function(room, workTracker)
 {
 	if (this._Debugging)
 		console.log("HarvestSource -> run")
-		
+	
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creep = Game.creeps[assignedCreeps[i]]
+        var creepName = assignedCreeps[i].CreepName
+        var creep = Game.creeps[creepName]
         if (!RoleHarvester.Run(creep, {HarvestSite: this._HarvestSite}))
         {
-            if (this.GetParent() > -1)
-                workTracker.AssignCreepToWorkId(room, this.GetParent(), assignedCreeps[i])
-            this.UnassignCreep(assignedCreeps[i])
+            if (assignedCreeps[i].ParentId > -1)
+                workTracker.AssignCreepToWorkId(room, null, assignedCreeps[i].ParentId, creepName)
+            this.UnassignCreep(creepName)
         }
     }
 }
@@ -50,6 +51,15 @@ HarvestSource.prototype.DeserializedData = function(data)
     Work.prototype.DeserializedData.call(this, data)
     
     this._HarvestSite = data.HarvestSite
+}
+
+HarvestSource.prototype.toString = function()
+{
+    var str = Work.prototype.toString.call(this)
+    
+    str += "\n  HarvestSource _HarvestSite [" + toString(this._HarvestSite) + "]"
+    
+    return str
 }
 
 // ##### Exports ######

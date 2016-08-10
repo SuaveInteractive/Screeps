@@ -1,5 +1,5 @@
 var ResourceAssigner = {}
-ResourceAssigner._Debugging = true
+ResourceAssigner._Debugging = false
 
 if (!Memory.ResourceSites)
 {
@@ -49,7 +49,7 @@ ResourceAssigner.GetAvailableMiningSite = function(room, resource, position, wor
     }
     else
     {
-        return selectedSite
+        return selectedSite.site
     }
 }
 

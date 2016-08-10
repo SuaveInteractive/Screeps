@@ -13,7 +13,7 @@ UtilityBuildContainer.prototype.Calculate = function(room, worldState)
     var result = 0.00
     
     if (numberOfUnassignedCreeps > 0 && numberOfContainersAvailable > 0)
-        result = 1.0
+        result = 3.0
         
 	return	{
 				UtilType: 'BUILD_CONTAINER', 

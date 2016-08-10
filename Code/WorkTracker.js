@@ -9,7 +9,6 @@ function WorkTracker()
         console.log(" WorkTracker.Contructor")
         
     this._Work = {}
-    this._CurrentWorkId = 0
 }
 
 WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
@@ -21,8 +20,7 @@ WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
         this._Work[room] = []
         
     var newWork = WorkFactory.GetWork(workType, room, data, this)
-    WorkFactory._CurrentWorkId++
-    
+
     this._Work[room].push(newWork)
     
     return newWork.GetWorkId()
@@ -68,7 +66,7 @@ WorkTracker.prototype.GetWorkTask = function(room, workId)
     return null
 }
 
-WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepName)
+WorkTracker.prototype.AssignCreepToWorkId = function(room, workParentId, workId, creepName)
 {
     if (this._Debugging)
         console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workId [" + workId + "] creepName [" + creepName + "]")
@@ -81,7 +79,7 @@ WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepName)
         var work = this._Work[room][i]
         if (work._Id == workId)
         {
-            work.AssignCreep(creepName)
+            work.AssignCreep(workParentId, creepName)
             return
         }
     }
@@ -109,14 +107,14 @@ WorkTracker.prototype.Run = function(room)
 
 WorkTracker.prototype.CleanUpWork = function(work)
 {
-    if (this._Debugging)
-        console.log(" WorkTracker.CleanUpWork")
+    //if (this._Debugging)
+     //   console.log(" WorkTracker.CleanUpWork")
         
     var assignedCreeps = work.GetAssignCreeps()
     
     for (var i in assignedCreeps)
     {
-        var creep = assignedCreeps[i]
+        var creep = assignedCreeps[i].CreepName
         if (Game.creeps[creep] == null)
         {
             if (this._Debugging)
@@ -131,12 +129,12 @@ WorkTracker.prototype.CleanUpWork = function(work)
 WorkTracker.prototype.SerializedData = function()
 {
     if (this._Debugging)
-        console.log(" WorkTracker.SerializedData: _CurrentWorkId [" + this._CurrentWorkId + "]")
+        console.log(" WorkTracker.SerializedData")
         
     var data = {}
     data.Work = {}
     
-    data.CurrentWorkId = Work._CurrentWorkId
+    data.CurrentWorkId = Work.CurrentWorkId
     
     for (var room in this._Work)
     {
@@ -158,7 +156,7 @@ WorkTracker.prototype.DeserializedData = function(data)
         console.log(" WorkTracker.DeserializedData")
         
     if (data.CurrentWorkId != null)
-        Work._CurrentWorkId = data.CurrentWorkId
+        Work.CurrentWorkId = data.CurrentWorkId
     
     for (var room in data.Work)
     {

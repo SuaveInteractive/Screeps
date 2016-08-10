@@ -1,10 +1,7 @@
-// ##### Statics ######
-var CurrentWorkId = 0;
-
 // ##### Object ######
 function Work(type, data)
 {
-    this._Debugging = false
+   // this._Debugging = true
     
     if (this._Debugging)
         console.log("Work Constructor")
@@ -14,15 +11,17 @@ function Work(type, data)
     var workId = data.Id
     if (workId == null)
     {
-        workId = CurrentWorkId
-        CurrentWorkId++
+        workId = Work.CurrentWorkId
+        Work.CurrentWorkId++
     }
     
     this._Id = workId
     this._Finished = false 
     this._AssignedCreeps = []
-    this._Parent = data.Parent
 }
+
+// ##### Statics ######
+Work.CurrentWorkId = 0;
 
 Work.prototype.Destroy = function()
 {
@@ -49,11 +48,6 @@ Work.prototype.SetWorkId = function(id)
     this._Id = id
 }
 
-Work.prototype.GetParent = function()
-{
-    return this._Parent
-}
-
 Work.prototype.GetFinished = function()
 {
     return this._Finished
@@ -64,12 +58,16 @@ Work.prototype.SetFinished = function(finished)
     this._Finished = finished
 }
 
-Work.prototype.AssignCreep = function(creepName)
+Work.prototype.AssignCreep = function(workParentId, creepName)
 {
     if (this._Debugging)
-        console.log(" Work.prototype.AssignCreep: creepName [" + creepName + "]") 
-        
-    this._AssignedCreeps.push(creepName)
+        console.log(" Work.prototype.AssignCreep: workParentId [" + workParentId + "] creepName [" + creepName + "]") 
+    
+    var parentId = workParentId
+    if (parentId == null)
+        parentId = -1
+
+    this._AssignedCreeps.push({ParentId: parentId, CreepName: creepName})
 }
 
 Work.prototype.UnassignCreep = function(creepName)
@@ -77,7 +75,7 @@ Work.prototype.UnassignCreep = function(creepName)
     if (this._Debugging)
         console.log(" Work.prototype.AssignCreep: creepName [" + creepName + "]") 
         
-    var index = this._AssignedCreeps.indexOf(creepName)
+    var index = _.findIndex(this._AssignedCreeps, function(o) { return o.CreepName == creepName; });
 
     if (index > -1)
         this._AssignedCreeps.splice(index, 1)
@@ -99,7 +97,6 @@ Work.prototype.SerializedData = function()
     data.Id = this._Id
     data.Finished = this._Finished
     data.AssignedCreeps = this._AssignedCreeps
-    data.Parent = this._Parent
     
     return data
 }
@@ -113,12 +110,18 @@ Work.prototype.DeserializedData = function(data)
     this._Id = data.Id
     this._Finished = data.Finished
     this._AssignedCreeps = data.AssignedCreeps
-    this._Parent = data.Parent
 }
 
 Work.prototype.toString = function()
 {
-    return "Work: Id [" + this._Id + "] Type [" + this._Type + "] Finished [" + this._Finished + "] AssignedCreeps [" + this._AssignedCreeps + "]"
+    var creepsAssigned = ""
+    for (var i in this._AssignedCreeps)
+    {
+        console.log(" i: " + i)
+        creepsAssigned += " " + this._AssignedCreeps[i].CreepName
+    }
+    
+    return "Work: Id [" + this._Id + "] Type [" + this._Type + "] Finished [" + this._Finished + "] AssignedCreeps [" + creepsAssigned + "]"
 }
 
 // ##### Exports ######

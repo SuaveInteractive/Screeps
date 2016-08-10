@@ -26,12 +26,13 @@ TransferResource.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creep = Game.creeps[assignedCreeps[i]]
+        var creepName = assignedCreeps[i].CreepName
+        var creep = Game.creeps[creepName]
         if (!TransferResourceRole.Run(creep, {Target: this._Target}))
         {
-            if (this.GetParent() > -1)
-                workTracker.AssignCreepToWorkId(room, this.GetParent(), assignedCreeps[i])
-            this.UnassignCreep(assignedCreeps[i])
+            if (assignedCreeps[i].ParentId > -1)
+                workTracker.AssignCreepToWorkId(room, null, assignedCreeps[i].ParentId, creepName)
+            this.UnassignCreep(creepName)
         }
     }
 }

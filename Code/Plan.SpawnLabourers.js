@@ -10,10 +10,10 @@ function SpawnLabourers(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = false
+    this._Debugging = true
     
     this._NumberOfLaborersSpawned = 0
-    this._NumberOfLaborersToSpawn = 1
+    this._NumberOfLaborersToSpawn = 2
 }
 
 SpawnLabourers.prototype = Object.create(Plan.Plan.prototype)
@@ -84,8 +84,10 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
 
             // TODO: Should be collect energy
             var miningSite = resourceAssigner.GetAvailableMiningSite(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName), workTracker)
-        
-            this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteId: miningSite.Id, SpawnId: spawns[spawn].id})
+            
+            console.log("+++ miningSite.WorkId: " + miningSite.WorkId)
+            
+            this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteWorkId: miningSite.WorkId, SpawnId: spawns[spawn].id})
         }
     }
     
@@ -105,7 +107,7 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             if (this._Debugging)
                 console.log(" SpawnLabourers.prototype.Run SPAWNED")
             
-            workTracker.AssignCreepToWorkId(room, this._RefillSpawnWorkId, this._SpawningCreepName)
+            workTracker.AssignCreepToWorkId(room, null, this._RefillSpawnWorkId, this._SpawningCreepName)
             
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    

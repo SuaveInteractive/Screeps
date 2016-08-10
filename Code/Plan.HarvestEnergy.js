@@ -11,7 +11,8 @@ function HarvestEnergy(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = false
+    this._Debugging = true
+    
     
     this._NumberOfLaborersSpawned = 0
     this._NumberOfLaborersToSpawn = 1
@@ -104,7 +105,7 @@ HarvestEnergy.prototype.Run = function(workTracker, recruiter)
             if (this._Debugging)
                 console.log(" HarvestEnergy.prototype.Run SPAWNED")
             
-            workTracker.AssignCreepToWorkId(room, this._WorkId, this._SpawningCreepName)
+            workTracker.AssignCreepToWorkId(room, null, this._WorkId, this._SpawningCreepName)
             
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    

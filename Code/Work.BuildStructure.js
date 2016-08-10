@@ -4,7 +4,7 @@ var Work = require('Work');
 // ##### Object ######
 function BuildStructure(room, data, workTracker)
 {
-    this._Debugging = true
+    BuildStructure.prototype._Debugging = false
     
     if (this._Debugging)
         console.log("BuildStructure constructor")
@@ -44,11 +44,12 @@ BuildStructure.prototype.Run = function(room, workTracker)
         
         if (creep.carry.energy < 1)
         {
-            workTracker.AssignCreepToWorkId(room, this._GatherResourceWorkId, assignedCreeps[i])
+            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._GatherResourceWorkId, assignedCreeps[i])
             this.UnassignCreep(assignedCreeps[i])
         }
         else
         {
+            console.log(" ******************* BUILD")
            // workTracker.AssignCreepToWorkId(room, this._TransferWorkId, assignedCreeps[i])
         //    this.UnassignCreep(assignedCreeps[i])
         }

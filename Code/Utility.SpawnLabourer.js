@@ -10,7 +10,7 @@ UtilitySpawnLabourer.prototype.Calculate = function(room, worldState)
     
     var result = 0.0
     
-    if (numberOfCreeps < 1)
+    if (numberOfCreeps < 2)
         result = 1.0
 
     result.toFixed(2)

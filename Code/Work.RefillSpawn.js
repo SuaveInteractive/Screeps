@@ -4,18 +4,17 @@ var Work = require('Work')
 // ##### Object ######
 function RefillSpawn(room, data, workTracker)
 {
-    this._Debugging = false
+    RefillSpawn.prototype._Debugging = true
     
     if (this._Debugging)
-        console.log("RefillSpawn constructor")
+        console.log("RefillSpawn constructor - HarvestSiteId [" + data.HarvestSiteWorkId + "]")
         
     Work.call(this, "RefillSpawn", data)
 
-    if (data.HarvestWorkId == null)
-        this._HarvestWorkId = workTracker.CreateWorkTask(room, 'HarvestSource', {Parent: this.GetWorkId(), HarvestSite: data.HarvestSiteId})
+    this._HarvestSiteWorkId = data.HarvestSiteWorkId
     
     if (data.TransferWorkId == null)
-        this._TransferWorkId = workTracker.CreateWorkTask(room, 'TransferResource', {Parent: this.GetWorkId(), Target: data.SpawnId})
+        this._TransferWorkId = workTracker.CreateWorkTask(room, 'TransferResource', {Target: data.SpawnId})
 }
 
 RefillSpawn.prototype = Object.create(Work.prototype)
@@ -25,7 +24,7 @@ RefillSpawn.prototype.Destroy = function(room, workTracker)
     var ret = []
     
     ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
-    ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestWorkId))
+    //ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestSiteWorkId))
     ret = ret.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
     
     return ret
@@ -39,17 +38,18 @@ RefillSpawn.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creep = Game.creeps[assignedCreeps[i]]
+        var creepName = assignedCreeps[i].CreepName
+        var creep = Game.creeps[creepName]
         
         if (creep.carry.energy < 1)
         {
-            workTracker.AssignCreepToWorkId(room, this._HarvestWorkId, assignedCreeps[i])
-            this.UnassignCreep(assignedCreeps[i])
+            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._HarvestSiteWorkId, creepName)
+            this.UnassignCreep(creepName)
         }
         else
         {
-            workTracker.AssignCreepToWorkId(room, this._TransferWorkId, assignedCreeps[i])
-            this.UnassignCreep(assignedCreeps[i])
+            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._TransferWorkId, creepName)
+            this.UnassignCreep(creepName)
         }
     }
 }
@@ -58,7 +58,7 @@ RefillSpawn.prototype.SerializedData = function()
 {
     var data = Work.prototype.SerializedData.call(this)
     
-    data.HarvestWorkId = this._HarvestWorkId
+    data.HarvestSiteWorkId = this._HarvestSiteWorkId
     data.TransferWorkId = this._TransferWorkId
     
     return data
@@ -68,7 +68,7 @@ RefillSpawn.prototype.DeserializedData = function(data)
 {
     Work.prototype.DeserializedData.call(this, data)
     
-    this._HarvestWorkId = data.HarvestWorkId
+    this._HarvestSiteWorkId = data.HarvestSiteWorkId
     this._TransferWorkId = data.TransferWorkId
 }
 
