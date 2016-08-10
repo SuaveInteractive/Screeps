@@ -28,7 +28,11 @@ Work.prototype.Destroy = function()
     if (this._Debugging)
         console.log("Work Destroy: Type [" + this._Type + "] Id [" + this._Id + "]")
     
-    var creeps =  this._AssignedCreeps 
+    var creeps = []
+    for (var i in this._AssignedCreeps)
+    {
+        creeps.push(this._AssignedCreeps[i].CreepName)
+    }
     this._AssignedCreeps = []
     return creeps
 }
@@ -73,7 +77,7 @@ Work.prototype.AssignCreep = function(workParentId, creepName)
 Work.prototype.UnassignCreep = function(creepName)
 {
     if (this._Debugging)
-        console.log(" Work.prototype.AssignCreep: creepName [" + creepName + "]") 
+        console.log(" Work.prototype.UnassignCreep: creepName [" + creepName + "]") 
         
     var index = _.findIndex(this._AssignedCreeps, function(o) { return o.CreepName == creepName; });
 

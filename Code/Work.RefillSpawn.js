@@ -27,6 +27,19 @@ RefillSpawn.prototype.Destroy = function(room, workTracker)
     //ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestSiteWorkId))
     ret = ret.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
     
+    var harvestWork = workTracker.GetWorkTask(room, this._HarvestSiteWorkId)
+    var assignedCreeps = harvestWork.GetAssignCreeps()
+    
+    for (var i in assignedCreeps)
+    {
+        var creep = assignedCreeps[i]
+        if (creep.ParentId == this.GetWorkId())
+        {
+            harvestWork.UnassignCreep(creep.CreepName)
+            ret.push(creep.CreepName)
+        }
+    }
+    
     return ret
 }
 

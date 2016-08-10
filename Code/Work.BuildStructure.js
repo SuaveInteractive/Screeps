@@ -1,10 +1,12 @@
 // ##### Requires ######
 var Work = require('Work');
 
+var RoleBuilder = require('CreepRole.Builder')
+
 // ##### Object ######
 function BuildStructure(room, data, workTracker)
 {
-    BuildStructure.prototype._Debugging = false
+    BuildStructure.prototype._Debugging = true
     
     if (this._Debugging)
         console.log("BuildStructure constructor")
@@ -40,18 +42,27 @@ BuildStructure.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creep = Game.creeps[assignedCreeps[i]]
+        var creepName = assignedCreeps[i].CreepName
+        var creep = Game.creeps[creepName]
         
         if (creep.carry.energy < 1)
         {
-            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._GatherResourceWorkId, assignedCreeps[i])
-            this.UnassignCreep(assignedCreeps[i])
+            console.log(" ***** BuildStructure this.GetWorkId(): [" + this.GetWorkId() + "]")
+            
+            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._GatherResourceWorkId, creepName)
+            this.UnassignCreep(creepName)
         }
         else
         {
-            console.log(" ******************* BUILD")
-           // workTracker.AssignCreepToWorkId(room, this._TransferWorkId, assignedCreeps[i])
-        //    this.UnassignCreep(assignedCreeps[i])
+            console.log("++++ 1")
+            if (!RoleBuilder.Run(creep, {ConstructionSite: this._ConstructionSiteId }))
+            {
+                console.log("++++ 2")
+                //if (assignedCreeps[i].ParentId > -1)
+                 //   workTracker.AssignCreepToWorkId(room, null, assignedCreeps[i].ParentId, creepName)
+                //this.UnassignCreep(creepName)
+            }
+            console.log("++++ 3")
         }
     }
 }

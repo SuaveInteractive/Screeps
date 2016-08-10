@@ -1,44 +1,36 @@
-var roleBuilder = {
+var RoleBuilder = {}
 
-    /** @param {Creep} creep **/
-    run: function (creep) {
-
-        if (creep.memory.building && creep.carry.energy == 0) 
+RoleBuilder.Run = function (creep, data) 
+{
+    if (data.ConstructionSite == null)
+        console.log("##### RoleBuilder: Need harvest site to work  #####")
+    
+    console.log("++++ 11")
+    if (this.CanBuild(creep)) 
+    {
+        var constructionSite = Game.getObjectById(data.ConstructionSite)
+        
+        console.log("++++ 12")
+        var result = creep.build(constructionSite)
+        if (result == ERR_NOT_IN_RANGE) 
         {
-            creep.memory.building = false;
+            console.log("++++ 13")
+            creep.moveTo(data.ConstructionSite)
         }
-        if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) 
+        else if (result != OK)
         {
-            creep.memory.building = true;
+           console.log("##### RoleBuilder: Error in build [" + result + "]  ConstructionSite [" + data.ConstructionSite + "] #####") 
         }
-
-        if (creep.memory.building) 
-        {
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES,  
-            {
-                filter: function(object) 
-                {
-                    return object.id == creep.memory.siteId
-                }
-            });
-            
-            if (targets.length) 
-            {
-                if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) 
-                {
-                    creep.moveTo(targets[0]);
-                }
-            }
-        }
-        else 
-        {
-            var sources = creep.room.find(FIND_SOURCES);
-            if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) 
-            {
-                creep.moveTo(sources[0]);
-            }
-        }
+        console.log("++++ 14")
+        return true
     }
-};
+    console.log("++++ 15")
+    return false
+}
 
-module.exports = roleBuilder;
+RoleBuilder.CanBuild = function(creep)
+{
+    return creep.carry.energy > 0 && creep.carryCapacity > 0
+}
+
+module.exports = RoleBuilder;

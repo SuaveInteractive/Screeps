@@ -28,7 +28,7 @@ WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
 
 WorkTracker.prototype.DestroyWorkTask = function(room, workId)
 {
-    if (this._Debugging)
+   // if (this._Debugging)
         console.log(" WorkTracker.prototype.DestroyWorkTask: room [" + room + "] workId [" + workId + "]")
         
     var work = this.GetWorkTask(room, workId)
@@ -68,8 +68,8 @@ WorkTracker.prototype.GetWorkTask = function(room, workId)
 
 WorkTracker.prototype.AssignCreepToWorkId = function(room, workParentId, workId, creepName)
 {
-    if (this._Debugging)
-        console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workId [" + workId + "] creepName [" + creepName + "]")
+    //if (this._Debugging)
+        console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workParentId [" + workParentId + "] workId [" + workId + "] creepName [" + creepName + "]")
         
     if (!this._Work[room])
         return
