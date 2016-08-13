@@ -42,27 +42,23 @@ BuildStructure.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creepName = assignedCreeps[i].CreepName
+        var creepInfo = assignedCreeps[i]
+        var creepName = creepInfo.CreepName
         var creep = Game.creeps[creepName]
         
         if (creep.carry.energy < 1)
         {
             console.log(" ***** BuildStructure this.GetWorkId(): [" + this.GetWorkId() + "]")
             
-            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._GatherResourceWorkId, creepName)
+            workTracker.AssignCreepToWorkId(room, this._GatherResourceWorkId, creepInfo)
             this.UnassignCreep(creepName)
         }
         else
         {
-            console.log("++++ 1")
             if (!RoleBuilder.Run(creep, {ConstructionSite: this._ConstructionSiteId }))
             {
-                console.log("++++ 2")
-                //if (assignedCreeps[i].ParentId > -1)
-                 //   workTracker.AssignCreepToWorkId(room, null, assignedCreeps[i].ParentId, creepName)
-                //this.UnassignCreep(creepName)
+                workTracker.UnassignCreepFromWork(room, creepInfo)
             }
-            console.log("++++ 3")
         }
     }
 }

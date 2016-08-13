@@ -28,13 +28,9 @@ Work.prototype.Destroy = function()
     if (this._Debugging)
         console.log("Work Destroy: Type [" + this._Type + "] Id [" + this._Id + "]")
     
-    var creeps = []
-    for (var i in this._AssignedCreeps)
-    {
-        creeps.push(this._AssignedCreeps[i].CreepName)
-    }
-    this._AssignedCreeps = []
-    return creeps
+    console.log(" Work Destroy - " + this.toString())
+    
+    return this._AssignedCreeps
 }
 
 Work.prototype.GetWorkType = function()
@@ -62,24 +58,22 @@ Work.prototype.SetFinished = function(finished)
     this._Finished = finished
 }
 
-Work.prototype.AssignCreep = function(workParentId, creepName)
+Work.prototype.AssignCreep = function(creepInfo)
 {
     if (this._Debugging)
-        console.log(" Work.prototype.AssignCreep: workParentId [" + workParentId + "] creepName [" + creepName + "]") 
+        console.log(" Work.prototype.AssignCreep: CreepName [" + creepInfo.CreepName + "] Parents [" + creepInfo.ParentStack + "]") 
     
-    var parentId = workParentId
-    if (parentId == null)
-        parentId = -1
-
-    this._AssignedCreeps.push({ParentId: parentId, CreepName: creepName})
+    this._AssignedCreeps.push(creepInfo)
+    
+    console.log(" Work.prototype.AssignCreep: this._AssignedCreeps [" + this._AssignedCreeps + "]") 
 }
 
-Work.prototype.UnassignCreep = function(creepName)
+Work.prototype.UnassignCreep = function(creepInfo)
 {
     if (this._Debugging)
-        console.log(" Work.prototype.UnassignCreep: creepName [" + creepName + "]") 
-        
-    var index = _.findIndex(this._AssignedCreeps, function(o) { return o.CreepName == creepName; });
+        console.log(" Work.prototype.UnassignCreep: creepName [" + creepInfo.CreepName + "]") 
+    
+    var index = _.findIndex(this._AssignedCreeps, function(o) { return o.CreepName == creepInfo.CreepName; });
 
     if (index > -1)
         this._AssignedCreeps.splice(index, 1)

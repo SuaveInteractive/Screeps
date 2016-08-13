@@ -41,6 +41,8 @@ WorkTracker.prototype.DestroyWorkTask = function(room, workId)
         
         this._Work[room].splice(index, 1)
         
+        console.log(" WorkTracker.DestroyWorkTask unassignedCreeps: [" + unassignedCreeps + "]")
+        
         return unassignedCreeps
     }
     else
@@ -66,25 +68,93 @@ WorkTracker.prototype.GetWorkTask = function(room, workId)
     return null
 }
 
-WorkTracker.prototype.AssignCreepToWorkId = function(room, workParentId, workId, creepName)
+WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepInfo)
 {
     //if (this._Debugging)
-        console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workParentId [" + workParentId + "] workId [" + workId + "] creepName [" + creepName + "]")
+        console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workId [" + workId + "] CreepName [" + creepInfo.CreepName + "]")
         
     if (!this._Work[room])
         return
     
+    if (creepInfo.ParentStack == null)
+        creepInfo.ParentStack = []
+    
+    var num = creepInfo.ParentStack.length
+    var currentWorkId = null
+    if (num > 0)
+        currentWorkId = creepInfo.ParentStack[num - 1]
+
+    console.log(" ++++ currentWorkId [" + currentWorkId + "], num [" + num + "]")        
+
+    var workToAssign = null
+    var workToUnassign = null
     for (var i in this._Work[room])
     {
         var work = this._Work[room][i]
         if (work._Id == workId)
         {
-            work.AssignCreep(workParentId, creepName)
-            return
+            workToAssign = work
+        }
+        
+        if (currentWorkId != null && currentWorkId == work._Id)
+        {
+            console.log(" ++++ FOUND WORK")
+            workToUnassign = work
         }
     }
     
-    console.log("##### WorkTracker: Cannot assign Creep to WorkId. room [" + room + "] workId [" + workId + "] creepName [" + creepName + "] #####")
+    console.log(" ++++ workToAssign: [" + workToAssign + "] workToUnassign [" + workToUnassign + "] num [" + num + "]")
+    
+    if (workToAssign != null && (num == 0 || workToUnassign != null) )
+    {
+        creepInfo.ParentStack.push(workId)
+        workToAssign.AssignCreep(creepInfo)
+        
+        if (workToUnassign != null)
+            workToUnassign.UnassignCreep(creepInfo)
+            
+        return
+    }
+    
+    console.log("##### WorkTracker: Cannot assign Creep to WorkId. room [" + room + "] workId [" + workId + "] creepName [" + creepInfo.CreepName + "] #####")
+}
+
+WorkTracker.prototype.UnassignCreepFromWork = function(room, creepInfo)
+{
+    //if (this._Debugging)
+        console.log(" WorkTracker.UnassignCreepToWorkId: room [" + room + "] CreepName [" + creepInfo.CreepName + "] ParentStack [" + creepInfo.ParentStack + "]")
+        
+    if (!this._Work[room])
+        return
+    
+    var currentWorkId = null
+    var newWorkId = null
+    
+    var num = creepInfo.ParentStack.length
+    if (num > 0)
+        currentWorkId = creepInfo.ParentStack.pop()
+    
+    // Don't want to pop the work we are going back to
+    if (num > 1)
+        newWorkId = creepInfo.ParentStack[num - 2]
+    
+    if (currentWorkId != null)
+    {
+        var oldWork = this.GetWorkTask(room, currentWorkId)
+        if (oldWork)
+            oldWork.UnassignCreep(creepInfo)
+        else
+            console.log("##### WorkTracker: Could not find Work to Unassign from. room [" + room + "] currentWorkId [" + currentWorkId + "] creepName [" + creepInfo.CreepName + "] #####")
+    }
+    else
+        console.log("##### WorkTracker: Could not find Work to Unassign from (currentWorkId == null!) [" + room + "] creepName [" + creepInfo.CreepName + "] #####")
+        
+    if (newWorkId != null)
+    {
+        var newWork = this.GetWorkTask(room, newWorkId)
+        if (newWork)
+            newWork.AssignCreep(creepInfo)
+    }
 }
 
 WorkTracker.prototype.Run = function(room)

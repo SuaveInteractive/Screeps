@@ -31,25 +31,22 @@ GatherResource.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creepName = assignedCreeps[i].CreepName
-        var parentId = assignedCreeps[i].ParentId
+        var creepInfo = assignedCreeps[i]
+        var creepName = creepInfo.CreepName
         var creep = Game.creeps[creepName]
         
         if (creep.carry.energy < 1)
         {
             console.log(" ***** GatherResource this.GetWorkId(): [" + this.GetWorkId() + "]")
             
-            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._HarvestWorkId, creepName)
-            this.UnassignCreep(creepName)
+            workTracker.AssignCreepToWorkId(room, this._HarvestWorkId, creepInfo)
         }
         else
         {
             if (this._Debugging)
-                console.log("GatherResource - Gathering Done, Unassign. CreepName [" + creepName + "], ParentId [" + parentId + "]")
+                console.log("GatherResource - Gathering Done, Unassign. CreepName [" + creepName + "]")
             
-            if (assignedCreeps[i].ParentId > -1)
-                workTracker.AssignCreepToWorkId(room, null, assignedCreeps[i].ParentId, creepName)
-            this.UnassignCreep(creepName)
+            workTracker.UnassignCreepFromWork(room, creepInfo)
         }
         
         // TODO: Collect Resource

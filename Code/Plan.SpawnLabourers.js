@@ -107,7 +107,7 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             if (this._Debugging)
                 console.log(" SpawnLabourers.prototype.Run SPAWNED")
             
-            workTracker.AssignCreepToWorkId(room, null, this._RefillSpawnWorkId, this._SpawningCreepName)
+            workTracker.AssignCreepToWorkId(room, this._RefillSpawnWorkId, {CreepName: this._SpawningCreepName})
             
             this._NumberOfLaborersSpawned++
             this._SpawningCreepName = ""    
@@ -135,6 +135,8 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             console.log(" SpawnLabourers.prototype.Run PLAN FINISHED")
             
         var unassigedCreeps = workTracker.DestroyWorkTask(room, this._RefillSpawnWorkId)
+        
+        console.log(" SpawnLabourers unassigedCreeps: [" + unassigedCreeps + "]")
         
         recruiter.AddUnassignedCreeps(unassigedCreeps)
         

@@ -26,13 +26,13 @@ HarvestSource.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creepName = assignedCreeps[i].CreepName
+        var creepInfo = assignedCreeps[i]
+        var creepName = creepInfo.CreepName
         var creep = Game.creeps[creepName]
         if (!RoleHarvester.Run(creep, {HarvestSite: this._HarvestSite}))
         {
-            if (assignedCreeps[i].ParentId > -1)
-                workTracker.AssignCreepToWorkId(room, null, assignedCreeps[i].ParentId, creepName)
-            this.UnassignCreep(creepName)
+            //this.UnassignCreep(creepInfo)
+            workTracker.UnassignCreepFromWork(room, creepInfo)
         }
     }
 }

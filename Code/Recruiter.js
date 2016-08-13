@@ -4,7 +4,7 @@ var ERR_NO_SPAWNER_AVAILIBLE = -18
     
 function Recruiter()
 {
-    this._Debugging = false
+    this._Debugging = true
     
     if (this._Debugging)
         console.log("Recruiter Constructor")
@@ -36,26 +36,32 @@ Recruiter.prototype.GetBestSpawner = function(room)
     };
 }
 
-Recruiter.prototype.AddUnassignedCreeps = function(creeps)
+Recruiter.prototype.AddUnassignedCreeps = function(creepInfos)
 {
     if (this._Debugging)
-        console.log(" Recruiter.prototype.AddUnassignedCreeps creeps [" + creeps + "]")
+        console.log(" Recruiter.prototype.AddUnassignedCreeps creeps [" + creepInfos + "]")
     
-    if (creeps == null)
+    if (creepInfos == null && creepInfos.length > 0)
         return
+    
+    for (var i in creepInfos)
+    {
+        creepInfos[i].ParentStack = []
+    }
         
-    this._UnassignedCreeps = this._UnassignedCreeps.concat(creeps)
+    this._UnassignedCreeps = this._UnassignedCreeps.concat(creepInfos)
 }
 
-Recruiter.prototype.RemoveUnassignedCreeps = function(creep)
+Recruiter.prototype.RemoveUnassignedCreeps = function(creepInfo)
 {
     if (this._Debugging)
-        console.log(" Recruiter.prototype.RemoveUnassignedCreeps creep [" + creep + "]")
+        console.log(" Recruiter.prototype.RemoveUnassignedCreeps creep [" + creepInfo + "]")
     
-    if (creep == null)
+    if (creepInfo == null)
         return
         
-    var index = this._UnassignedCreeps.indexOf(creep)
+    var index = _.findIndex(this._UnassignedCreeps, function(o) { return o.CreepName == creepInfo.CreepName; });
+        
     this._UnassignedCreeps.splice(index, 1)
 }
 

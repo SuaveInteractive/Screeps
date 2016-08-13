@@ -23,20 +23,41 @@ RefillSpawn.prototype.Destroy = function(room, workTracker)
 {
     var ret = []
     
-    ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
-    //ret = ret.concat(workTracker.DestroyWorkTask(room, this._HarvestSiteWorkId))
-    ret = ret.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
+    var r1 = Work.prototype.Destroy.call(this, workTracker)
+    console.log(" 1++++ " + r1)
+    
+    var r2 = workTracker.DestroyWorkTask(room, this._TransferWorkId)
+    console.log(" 2++++ " + r2)
+    
+   // ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
+//    ret = ret.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
+    
+    if (r1 != null)
+        ret = ret.concat(r1)
+        
+    if (r2 != null)
+        ret = ret.concat(r2)
     
     var harvestWork = workTracker.GetWorkTask(room, this._HarvestSiteWorkId)
     var assignedCreeps = harvestWork.GetAssignCreeps()
     
     for (var i in assignedCreeps)
     {
-        var creep = assignedCreeps[i]
-        if (creep.ParentId == this.GetWorkId())
+        var creepInfo = assignedCreeps[i]
+        var parentStack = creepInfo.ParentStack
+        var num = parentStack.length
+        
+        console.log(" 3a++++ CreepName [" + creepInfo.CreepName + "] num [" + num + "] GetWorkId [" + this.GetWorkId() + "]")
+        
+        for (var j in parentStack)
         {
-            harvestWork.UnassignCreep(creep.CreepName)
-            ret.push(creep.CreepName)
+            if (parentStack[j] == this.GetWorkId())
+            {
+                console.log(" 3b++++ " + creepInfo)
+                harvestWork.UnassignCreep(creepInfo)
+                ret.push(creepInfo)
+                break
+            }
         }
     }
     
@@ -51,18 +72,17 @@ RefillSpawn.prototype.Run = function(room, workTracker)
 	var assignedCreeps = this.GetAssignCreeps()
     for (var i in assignedCreeps)
     {
-        var creepName = assignedCreeps[i].CreepName
+        var creepInfo = assignedCreeps[i]
+        var creepName = creepInfo.CreepName
         var creep = Game.creeps[creepName]
         
         if (creep.carry.energy < 1)
         {
-            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._HarvestSiteWorkId, creepName)
-            this.UnassignCreep(creepName)
+            workTracker.AssignCreepToWorkId(room, this._HarvestSiteWorkId, creepInfo)
         }
         else
         {
-            workTracker.AssignCreepToWorkId(room, this.GetWorkId(), this._TransferWorkId, creepName)
-            this.UnassignCreep(creepName)
+            workTracker.AssignCreepToWorkId(room, this._TransferWorkId, creepInfo)
         }
     }
 }
