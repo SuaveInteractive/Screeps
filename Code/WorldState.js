@@ -16,7 +16,7 @@ function WorldState()
     this.CreepInRoles.CREEP_HARVESTERS = 0
 }
 
-WorldState.prototype.CalculateColonyState = function(playerName, workTracker, recruiter)
+WorldState.prototype.CalculateColonyState = function(playerName, workTracker, recruiter, resourceAssigner)
 {
     // World
     this.TotalEnergyAvailable = 0
@@ -33,15 +33,26 @@ WorldState.prototype.CalculateColonyState = function(playerName, workTracker, re
             
             var availableStructures = {}
             
-            for (var i in CONTROLLER_STRUCTURES)
+            for (var j in CONTROLLER_STRUCTURES)
             {
-                var availableArray = CONTROLLER_STRUCTURES[i]
-                var alreadyPlace = Game.spawns.Spawn1.room.find(FIND_MY_STRUCTURES, {
-                    filter: { structureType: i }
+                var availableArray = CONTROLLER_STRUCTURES[j]
+                var alreadyPlace = room.find(FIND_MY_STRUCTURES, {
+                    filter: { structureType: j }
                 });
-                availableStructures[i] = availableArray[room.controller.level] - alreadyPlace.length
+                availableStructures[j] = availableArray[room.controller.level] - alreadyPlace.length
             }
             
+            // resources
+            if (resourceAssigner != null)
+            {
+                var resourceSites = resourceAssigner.GetResourceSites(room)
+                for (var j in resourceSites)
+                {
+                    console.log(" resourceSites: [" + resourceSites[j] + "]")
+                }
+            }
+            
+            // Fill out the room info
             this.Rooms[room] = 
             {
                 RoomControllerLevel: room.controller.level,

@@ -4,7 +4,7 @@ var ERR_NO_SPAWNER_AVAILIBLE = -18
     
 function Recruiter()
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("Recruiter Constructor")

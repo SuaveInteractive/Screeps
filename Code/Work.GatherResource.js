@@ -6,7 +6,7 @@ var resourceAssigner = require('ResourceAssigner');
 // ##### Object ######
 function GatherResource(room, data, workTracker)
 {
-    this._Debugging = true
+    this._Debugging = false
     
     if (this._Debugging)
         console.log("GatherResource constructor")
@@ -37,8 +37,6 @@ GatherResource.prototype.Run = function(room, workTracker)
         
         if (creep.carry.energy < 1)
         {
-            console.log(" ***** GatherResource this.GetWorkId(): [" + this.GetWorkId() + "]")
-            
             workTracker.AssignCreepToWorkId(room, this._HarvestWorkId, creepInfo)
         }
         else

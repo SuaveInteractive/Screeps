@@ -4,7 +4,7 @@ var Work = require('Work')
 // ##### Object ######
 function RefillSpawn(room, data, workTracker)
 {
-    RefillSpawn.prototype._Debugging = true
+    RefillSpawn.prototype._Debugging = false
     
     if (this._Debugging)
         console.log("RefillSpawn constructor - HarvestSiteId [" + data.HarvestSiteWorkId + "]")
@@ -24,13 +24,7 @@ RefillSpawn.prototype.Destroy = function(room, workTracker)
     var ret = []
     
     var r1 = Work.prototype.Destroy.call(this, workTracker)
-    console.log(" 1++++ " + r1)
-    
     var r2 = workTracker.DestroyWorkTask(room, this._TransferWorkId)
-    console.log(" 2++++ " + r2)
-    
-   // ret = ret.concat(Work.prototype.Destroy.call(this, workTracker))
-//    ret = ret.concat(workTracker.DestroyWorkTask(room, this._TransferWorkId))
     
     if (r1 != null)
         ret = ret.concat(r1)
@@ -47,13 +41,10 @@ RefillSpawn.prototype.Destroy = function(room, workTracker)
         var parentStack = creepInfo.ParentStack
         var num = parentStack.length
         
-        console.log(" 3a++++ CreepName [" + creepInfo.CreepName + "] num [" + num + "] GetWorkId [" + this.GetWorkId() + "]")
-        
         for (var j in parentStack)
         {
             if (parentStack[j] == this.GetWorkId())
             {
-                console.log(" 3b++++ " + creepInfo)
                 harvestWork.UnassignCreep(creepInfo)
                 ret.push(creepInfo)
                 break

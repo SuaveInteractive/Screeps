@@ -28,7 +28,7 @@ WorkTracker.prototype.CreateWorkTask = function(room, workType, data)
 
 WorkTracker.prototype.DestroyWorkTask = function(room, workId)
 {
-   // if (this._Debugging)
+    if (this._Debugging)
         console.log(" WorkTracker.prototype.DestroyWorkTask: room [" + room + "] workId [" + workId + "]")
         
     var work = this.GetWorkTask(room, workId)
@@ -40,8 +40,6 @@ WorkTracker.prototype.DestroyWorkTask = function(room, workId)
         var index = this._Work[room].indexOf(work)
         
         this._Work[room].splice(index, 1)
-        
-        console.log(" WorkTracker.DestroyWorkTask unassignedCreeps: [" + unassignedCreeps + "]")
         
         return unassignedCreeps
     }
@@ -70,7 +68,7 @@ WorkTracker.prototype.GetWorkTask = function(room, workId)
 
 WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepInfo)
 {
-    //if (this._Debugging)
+    if (this._Debugging)
         console.log(" WorkTracker.AssignCreepToWorkId: room [" + room + "] workId [" + workId + "] CreepName [" + creepInfo.CreepName + "]")
         
     if (!this._Work[room])
@@ -84,8 +82,6 @@ WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepInfo)
     if (num > 0)
         currentWorkId = creepInfo.ParentStack[num - 1]
 
-    console.log(" ++++ currentWorkId [" + currentWorkId + "], num [" + num + "]")        
-
     var workToAssign = null
     var workToUnassign = null
     for (var i in this._Work[room])
@@ -98,13 +94,10 @@ WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepInfo)
         
         if (currentWorkId != null && currentWorkId == work._Id)
         {
-            console.log(" ++++ FOUND WORK")
             workToUnassign = work
         }
     }
-    
-    console.log(" ++++ workToAssign: [" + workToAssign + "] workToUnassign [" + workToUnassign + "] num [" + num + "]")
-    
+
     if (workToAssign != null && (num == 0 || workToUnassign != null) )
     {
         creepInfo.ParentStack.push(workId)
@@ -121,7 +114,7 @@ WorkTracker.prototype.AssignCreepToWorkId = function(room, workId, creepInfo)
 
 WorkTracker.prototype.UnassignCreepFromWork = function(room, creepInfo)
 {
-    //if (this._Debugging)
+    if (this._Debugging)
         console.log(" WorkTracker.UnassignCreepToWorkId: room [" + room + "] CreepName [" + creepInfo.CreepName + "] ParentStack [" + creepInfo.ParentStack + "]")
         
     if (!this._Work[room])

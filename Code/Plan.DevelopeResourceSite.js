@@ -8,27 +8,27 @@ var buildContainer = require('Utility.BuildContainer')
 var constructionSiteGenerator = require('ConstructionSiteGenerator')
 
 // ##### Object ######
-function BuildContainer(room)
+function DevelopeResourceSite(room)
 {
     Plan.Plan.call(this)
     
     this._Debugging = true
 }
 
-BuildContainer.prototype = Object.create(Plan.Plan.prototype)
+DevelopeResourceSite.prototype = Object.create(Plan.Plan.prototype)
 
-BuildContainer.prototype.GetUtilitiesServed = function()
+DevelopeResourceSite.prototype.GetUtilitiesServed = function()
 {
-    var utilityServed = ['BUILD_CONTAINER']
+    var utilityServed = ['DEVELOPE_RESOURCE_SITES']
     return utilityServed
 }
 
-BuildContainer.prototype.GetId = function()
+DevelopeResourceSite.prototype.GetId = function()
 {
-    return 'BUILD_CONTAINER'
+    return 'DEVELOPE_RESOURCE_SITES'
 }
 
-BuildContainer.prototype.GetFinisedResult = function(room, worldState)
+DevelopeResourceSite.prototype.GetFinisedResult = function(room, worldState)
 {
     var result = []
     
@@ -41,7 +41,7 @@ BuildContainer.prototype.GetFinisedResult = function(room, worldState)
     return result
 }
 
-BuildContainer.prototype.SerializedData = function()
+DevelopeResourceSite.prototype.SerializedData = function()
 {
     var data = Plan.Plan.prototype.SerializedData.call(this)
     
@@ -50,17 +50,17 @@ BuildContainer.prototype.SerializedData = function()
     return data
 }
 
-BuildContainer.prototype.DeserializedData = function(data)
+DevelopeResourceSite.prototype.DeserializedData = function(data)
 {
     Plan.Plan.prototype.DeserializedData.call(this, data)
     
     this._BuildStructureWorkId = data.BuildStructureWorkId
 }
 
-BuildContainer.prototype.Run = function(workTracker, recruiter)
+DevelopeResourceSite.prototype.Run = function(workTracker, recruiter)
 {
 	if (this._Debugging)
-		console.log("Plan.BuildContainer -> run [" + workTracker + "]")
+		console.log("Plan.DevelopeResourceSite -> run [" + workTracker + "]")
 
     var room = Game.rooms[this.GetPlanRoomName()]
     
@@ -83,7 +83,7 @@ BuildContainer.prototype.Run = function(workTracker, recruiter)
 	    if (buildWork.GetFinished() == true)
 	    {
 	        if (this._Debugging)
-                console.log(" BuildContainer.prototype.Run PLAN FINISHED")
+                console.log(" DevelopeResourceSite.prototype.Run PLAN FINISHED")
             
             var unassigedCreeps = workTracker.DestroyWorkTask(room, this._BuildStructureWorkId)
             recruiter.AddUnassignedCreeps(unassigedCreeps)
@@ -103,12 +103,10 @@ BuildContainer.prototype.Run = function(workTracker, recruiter)
 	}
 }
 
-BuildContainer.prototype.toString = function()
+DevelopeResourceSite.prototype.toString = function()
 {
-    return "BuildContainer"
+    return "DevelopeResourceSite"
 }
 
 // ##### Exports ######
-module.exports = {
-	BuildContainer: BuildContainer,
-};
+module.exports = DevelopeResourceSite

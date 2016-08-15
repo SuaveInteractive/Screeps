@@ -11,7 +11,7 @@ function HarvestEnergy(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = true
+    this._Debugging = false
     
     
     this._NumberOfLaborersSpawned = 0

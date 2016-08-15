@@ -6,7 +6,7 @@ var RoleBuilder = require('CreepRole.Builder')
 // ##### Object ######
 function BuildStructure(room, data, workTracker)
 {
-    BuildStructure.prototype._Debugging = true
+    BuildStructure.prototype._Debugging = false
     
     if (this._Debugging)
         console.log("BuildStructure constructor")
@@ -39,25 +39,32 @@ BuildStructure.prototype.Run = function(room, workTracker)
 	if (this._Debugging)
 		console.log("BuildStructure -> run ConstructionSiteId [" + this._ConstructionSiteId + "]")
 		
-	var assignedCreeps = this.GetAssignCreeps()
-    for (var i in assignedCreeps)
+    var constructionSite = Game.getObjectById(this._ConstructionSiteId)
+    if (constructionSite == null)
     {
-        var creepInfo = assignedCreeps[i]
-        var creepName = creepInfo.CreepName
-        var creep = Game.creeps[creepName]
-        
-        if (creep.carry.energy < 1)
+        this.SetFinished(true)
+    }
+    else
+    {
+    	var assignedCreeps = this.GetAssignCreeps()
+        for (var i in assignedCreeps)
         {
-            console.log(" ***** BuildStructure this.GetWorkId(): [" + this.GetWorkId() + "]")
+            var creepInfo = assignedCreeps[i]
+            var creepName = creepInfo.CreepName
+            var creep = Game.creeps[creepName]
             
-            workTracker.AssignCreepToWorkId(room, this._GatherResourceWorkId, creepInfo)
-            this.UnassignCreep(creepName)
-        }
-        else
-        {
-            if (!RoleBuilder.Run(creep, {ConstructionSite: this._ConstructionSiteId }))
+            if (creep.carry.energy < 1)
             {
-                workTracker.UnassignCreepFromWork(room, creepInfo)
+                workTracker.AssignCreepToWorkId(room, this._GatherResourceWorkId, creepInfo)
+                this.UnassignCreep(creepName)
+            }
+            else
+            {
+    
+                if (!RoleBuilder.Run(creep, {ConstructionSite: this._ConstructionSiteId }))
+                {
+                    workTracker.UnassignCreepFromWork(room, creepInfo)
+                }
             }
         }
     }

@@ -6,6 +6,8 @@ if (!Memory.HiveMind)
     Memory.HiveMind.TrackedWork = {}
     Memory.HiveMind.Recruiter = {}
     Memory.HiveMind.Recruiter.UnassignedCreeps = []
+    
+    Memory.HiveMind.ResourceAssigner = []
 }
 
 var calculateNeeds = require('AI.CalculateNeeds');
@@ -19,7 +21,7 @@ var AIPlans = require('Plans');
 var worldState = require('WorldState');
 
 var WorkTracker = require('WorkTracker')
-var resouceAssigner = require('ResourceAssigner')
+var ResouceAssigner = require('ResourceAssigner')
 var Recruiter = require('Recruiter')
 
 module.exports = {
@@ -36,16 +38,21 @@ module.exports = {
         var recruiter = new Recruiter()
         recruiter.DeserializedData(Memory.HiveMind.Recruiter)
         
+        var resourceAssigner = new ResouceAssigner()
+        resourceAssigner.DeserializedData(Memory.HiveMind.ResourceAssigner)
+        
         var ws = new worldState.WorldState()
-        ws.CalculateColonyState(this._Player, workTracker, recruiter)
+        ws.CalculateColonyState(this._Player, workTracker, recruiter, resourceAssigner)
         
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName]
+            
+            resourceAssigner.CreateResourceSites(room, workTracker)
         
             workTracker.Run(room)
         
-            resouceAssigner.UpdateCreeps(room)
+            resourceAssigner.UpdateCreeps(room)
             
             var currentPlans = this._DeserialiseCurrentPlans(room)
             
@@ -72,6 +79,7 @@ module.exports = {
         
         Memory.HiveMind.TrackedWork = workTracker.SerializedData()
         Memory.HiveMind.Recruiter = recruiter.SerializedData()
+        Memory.HiveMind.ResourceAssigner = resourceAssigner.SerializedData()
     },
     
     _SerialiseCurrentPlans: function(currentPlans)

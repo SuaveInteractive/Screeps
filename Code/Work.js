@@ -28,8 +28,6 @@ Work.prototype.Destroy = function()
     if (this._Debugging)
         console.log("Work Destroy: Type [" + this._Type + "] Id [" + this._Id + "]")
     
-    console.log(" Work Destroy - " + this.toString())
-    
     return this._AssignedCreeps
 }
 
@@ -64,8 +62,6 @@ Work.prototype.AssignCreep = function(creepInfo)
         console.log(" Work.prototype.AssignCreep: CreepName [" + creepInfo.CreepName + "] Parents [" + creepInfo.ParentStack + "]") 
     
     this._AssignedCreeps.push(creepInfo)
-    
-    console.log(" Work.prototype.AssignCreep: this._AssignedCreeps [" + this._AssignedCreeps + "]") 
 }
 
 Work.prototype.UnassignCreep = function(creepInfo)

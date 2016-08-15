@@ -1,17 +1,19 @@
-var ResourceAssigner = {}
-ResourceAssigner._Debugging = false
-
-if (!Memory.ResourceSites)
+function ResourceAssigner()
 {
-    Memory.ResourceSites = {}
+    this._Debugging = true
+    
+    if (this._Debugging)
+        console.log("ResourceAssigner Constructor")
+        
+    this._Sites = {}
 }
 
-ResourceAssigner.GetAvailableMiningSite = function(room, resource, position, workTracker)
+ResourceAssigner.prototype.GetAvailableMiningSite = function(room, resource, position, workTracker)
 {
     if (this._Debugging)
         console.log(" ResourceAssigner.GetAvailableMiningSite: position [" + position + "]")
     
-    if (!Memory.ResourceSites || !Memory.ResourceSites[room] || !Memory.ResourceSites[room].Parsed)
+    if (!this._Sites[room] || !this._Sites[room].Parsed)
         this.CreateResourceSites(room, workTracker)
     
     var sortedSource = this.GetClosestResourceSites(room, position)
@@ -53,15 +55,15 @@ ResourceAssigner.GetAvailableMiningSite = function(room, resource, position, wor
     }
 }
 
-ResourceAssigner.AssignCreepToSite = function(room, creepHarvester, miningSiteId)
+ResourceAssigner.prototype.AssignCreepToSite = function(room, creepHarvester, miningSiteId)
 {
     if (this._Debugging)
         console.log(" ResourceAssigner.AssignCreepToSite, creepHarvester: " + creepHarvester + ", miningSiteId: " + miningSiteId)
     
-    if (!Memory.ResourceSites || !Memory.ResourceSites[room] || !Memory.ResourceSites[room].Parsed)
+    if (!this._Sites[room] || !this._Sites[room].Parsed)
         this.CreateResourceSites(room)
         
-    var roomSites = Memory.ResourceSites[room]
+    var roomSites = this._Sites[room]
     var miningSite = roomSites.Sites[miningSiteId]
 
     miningSite.AssignedWorkers.push(creepHarvester)
@@ -69,12 +71,12 @@ ResourceAssigner.AssignCreepToSite = function(room, creepHarvester, miningSiteId
     miningSite.CurrentWorkingCapacity = this.GetCurrentMiningCapacity(miningSite)
 }
 
-ResourceAssigner.UnassignCreepToSite = function(room, creep, miningSiteId)
+ResourceAssigner.prototype.UnassignCreepToSite = function(room, creep, miningSiteId)
 {
     if (this._Debugging)
         console.log(" ResourceAssigner.UnassignCreepToSite, creep: " + creep + ", miningSiteId: " + miningSiteId)
     
-    var roomSites = Memory.ResourceSites[room]
+    var roomSites = this._Sites[room]
     var miningSite = roomSites.Sites[miningSiteId]
 
     var index = miningSite.AssignedWorkers.indexOf(creep)
@@ -83,7 +85,7 @@ ResourceAssigner.UnassignCreepToSite = function(room, creep, miningSiteId)
     miningSite.CurrentWorkingCapacity = this.GetCurrentMiningCapacity(miningSite)
 }
 
-ResourceAssigner.GetCurrentMiningCapacity = function(miningSite)
+ResourceAssigner.prototype.GetCurrentMiningCapacity = function(miningSite)
 {
     var total = 0
     
@@ -104,17 +106,17 @@ ResourceAssigner.GetCurrentMiningCapacity = function(miningSite)
     return total
 }
 
-ResourceAssigner.UpdateCreeps = function(room)
+ResourceAssigner.prototype.UpdateCreeps = function(room)
 {
-    if (!Memory.ResourceSites || !Memory.ResourceSites[room])
+    if (this._Sites[room] == null || this._Sites[room].Sites == null)
         return 
         
     if (this._Debugging)
         console.log(" ResourceAssigner.UpdateCreeps")
         
-    for (var resSiteRoom in Memory.ResourceSites[room].Sites)
+    for (var resSiteRoom in this._Sites[room].Sites)
     {
-        var site = Memory.ResourceSites[room].Sites[resSiteRoom]
+        var site = this._Sites[room].Sites[resSiteRoom]
         for (var i in site.AssignedWorkers)
         {
             for (var j in site.AssignedWorkers)
@@ -128,17 +130,17 @@ ResourceAssigner.UpdateCreeps = function(room)
     }
 }
 
-ResourceAssigner.GetClosestResourceSites = function(room, position)
+ResourceAssigner.prototype.GetClosestResourceSites = function(room, position)
 {
     if (this._Debugging)
         console.log(" ResourceAssigner.GetClosestResourceSites, room [" + room + "], position [" + position + "]")
         
     var sortedSources = []
     
-    for (var id in Memory.ResourceSites[room].Sites)
+    for (var id in this._Sites[room].Sites)
     {
-        var site = Memory.ResourceSites[room].Sites[id]
-        var source = Memory.ParsedRooms[room].Sources[id]
+        var site = this._Sites[room].Sites[id]
+        var source = this._Sites[room].Sources[id]
         var distance = position.getRangeTo(new RoomPosition(source.SourcePos.x, source.SourcePos.y, source.SourcePos.roomName))
         sortedSources.push({site: site, distance: distance, id: source.id})
     }
@@ -160,14 +162,30 @@ ResourceAssigner.GetClosestResourceSites = function(room, position)
     return sortedSources
 }
 
-ResourceAssigner.CreateResourceSites = function(room, workTracker)
+ResourceAssigner.prototype.GetResourceSites = function(room)
 {
-    if (!Memory.ResourceSites)
+    if (this._Debugging)
+        console.log(" ResourceAssigner.GetResourceSites: room [" + room + "]")
+        
+    if (this._Sites[room] == null || this._Sites[room].Sites == null)
+        return 
+        
+    return this._Sites[room].Sites
+}
+
+ResourceAssigner.prototype.CreateResourceSites = function(room, workTracker)
+{
+    if (this._Sites[room] != null && this._Sites[room].Sites != null)
+        return 
+        
+    if (this._Debugging)
+        console.log(" ResourceAssigner.CreateResourceSites: room [" + room + "] workTracker [" + workTracker + "]")
+        
+    if (this._Sites[room] == null)
     {
-        Memory.ResourceSites = {}
+        this._Sites[room] = {}
+        this._Sites[room].Sites = {}
     }
-    Memory.ResourceSites[room] = {}
-    Memory.ResourceSites[room].Sites = {}
     
     var roomSources = Memory.ParsedRooms[room].Sources
     
@@ -176,7 +194,7 @@ ResourceAssigner.CreateResourceSites = function(room, workTracker)
         var source = roomSources[hash]
         var workId = workTracker.CreateWorkTask(room, 'HarvestSource', {HarvestSite: source.id})
 
-        Memory.ResourceSites[room].Sites[source.id] = 
+        this._Sites[room].Sites[source.id] = 
         {
             id: source.id,
             AssignedWorkers: [],
@@ -187,18 +205,25 @@ ResourceAssigner.CreateResourceSites = function(room, workTracker)
             WorkId: workId,
         }
     }
-    Memory.ResourceSites[room].Parsed = true
+    this._Sites[room].Parsed = true
 }
 
-ResourceAssigner.SerializedData = function()
+ResourceAssigner.prototype.SerializedData = function()
 {
     var data = {}
+    
+    data.Sites = this._Sites
+    
     return data
 }
 
-ResourceAssigner.DeserializedData = function(data)
+ResourceAssigner.prototype.DeserializedData = function(data)
 {
-
+    if (data == null)
+        return
+        
+    if (data.Sites != null)
+        this._Sites = data.Sites
 }
 
 module.exports = ResourceAssigner;

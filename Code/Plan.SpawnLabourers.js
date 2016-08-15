@@ -10,7 +10,7 @@ function SpawnLabourers(room)
 {
     Plan.Plan.call(this)
     
-    this._Debugging = true
+    this._Debugging = false
     
     this._NumberOfLaborersSpawned = 0
     this._NumberOfLaborersToSpawn = 2
@@ -83,10 +83,10 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             var spawnPos = spawns[spawn].pos
 
             // TODO: Should be collect energy
+
+            // resourceAssigner is no longer a static object.  Hive Mind has it now
             var miningSite = resourceAssigner.GetAvailableMiningSite(room, RESOURCE_ENERGY, new RoomPosition(spawnPos.x, spawnPos.y, spawnPos.roomName), workTracker)
-            
-            console.log("+++ miningSite.WorkId: " + miningSite.WorkId)
-            
+
             this._RefillSpawnWorkId = workTracker.CreateWorkTask(room, 'RefillSpawn', {HarvestSiteWorkId: miningSite.WorkId, SpawnId: spawns[spawn].id})
         }
     }
@@ -135,9 +135,7 @@ SpawnLabourers.prototype.Run = function(workTracker, recruiter)
             console.log(" SpawnLabourers.prototype.Run PLAN FINISHED")
             
         var unassigedCreeps = workTracker.DestroyWorkTask(room, this._RefillSpawnWorkId)
-        
-        console.log(" SpawnLabourers unassigedCreeps: [" + unassigedCreeps + "]")
-        
+
         recruiter.AddUnassignedCreeps(unassigedCreeps)
         
         this.SetFinished(true)
